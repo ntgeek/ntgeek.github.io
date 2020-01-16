@@ -410,13 +410,15 @@ height:50vh;
 </li>
 </ul>
 </blockquote>
-<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><h3 id="相关优化类问题"><a href="#相关优化类问题" class="headerlink" title="相关优化类问题"></a>相关优化类问题</h3><p>假设现在有这么一函数：<br>$$<br>f(x)=sin(10<em>x)+cos(2</em>x)*x<br>$$<br>要求其在[1,5]范围内的最大值。</p>
+<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><h3 id="相关优化类问题"><a href="#相关优化类问题" class="headerlink" title="相关优化类问题"></a>相关优化类问题</h3><p>假设现在有这么一函数：</p>
+<script type="math/tex; mode=display">
+f(x)=sin(10*x)+cos(2*x)*x</script><p>要求其在[1,5]范围内的最大值。</p>
 <figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">lb=<span class="number">1</span>;ub=<span class="number">5</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">ezplot(<span class="string">'sin(10*x)+cos(2*x)*x'</span>,[lb,ub]);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">xlabel(<span class="string">'自变量/X'</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">ylabel(<span class="string">'函数值/Y'</span>);</span></pre></td></tr></table></figure>
-
 <p><img src="https://s2.ax1x.com/2019/12/02/Qu5HWn.png" alt=""></p>
 <pre><code>如果不按正常求导计算，可能第一反应都是穷举法。把范围内每个值都算一遍再比较大小。
 
-那么如果求的是整数范围，那么要算5遍，但是如果要精确到小数后8位，则要算5 00000000 次，即便使用计算机依然是一个庞大的运算过程。而优化问题中很多都类似于问题，无法用穷举法解出答案，我们叫这类问题为 NP难题。</code></pre><h4 id="关于NP难问题："><a href="#关于NP难问题：" class="headerlink" title="关于NP难问题："></a>关于NP难问题：</h4><p>P问题是一个判定问题类，这些问题可以用一个确定性算法在多项式时间内判定或解出。如果一个判定性问题的复杂度是该问题的一个实例的规模n的多项式函数，则我们说这种可以在多项式时间内解决的判定性问题属于P类问题。P类问题就是所有复杂度为多项式时间的问题的集合。</p>
+那么如果求的是整数范围，那么要算5遍，但是如果要精确到小数后8位，则要算5 00000000 次，即便使用计算机依然是一个庞大的运算过程。而优化问题中很多都类似于问题，无法用穷举法解出答案，我们叫这类问题为 NP难题。
+</code></pre><h4 id="关于NP难问题："><a href="#关于NP难问题：" class="headerlink" title="关于NP难问题："></a>关于NP难问题：</h4><p>P问题是一个判定问题类，这些问题可以用一个确定性算法在多项式时间内判定或解出。如果一个判定性问题的复杂度是该问题的一个实例的规模n的多项式函数，则我们说这种可以在多项式时间内解决的判定性问题属于P类问题。P类问题就是所有复杂度为多项式时间的问题的集合。</p>
 <p>NP是指非确定性多项式（non-deterministic polynomial，缩写NP）。所谓的非确定性是指，可用一定数量的运算去解决 多项式时间 内可解决的问题。</p>
 <p>如果一个判定性问题的复杂度是该问题的一个实例的规模n的多项式函数，则这种可以在多项式时间内解决的判定性问题属于P类问题。P类问题就是所有复杂度为多项式时间的问题的集合。通俗的称所有复杂度为多项式时间的问题为易解的问题类否则为难解的问题。</p>
 <p>然而有些问题很难找到多项式时间的算法（或许根本不存在），但是如果给了该问题的一个答案，可以在多项式时间内判断这个答案是否正确，这种可以在多项式时间内验证一个解是否正确的问题称为NP问题，亦称为易验证问题类。</p>
@@ -441,10 +443,12 @@ height:50vh;
 <p><img src="https://s2.ax1x.com/2019/12/02/QuIX9A.jpg" alt=""></p>
 <h4 id="模拟退火算法"><a href="#模拟退火算法" class="headerlink" title="模拟退火算法"></a>模拟退火算法</h4><pre><code>模拟退火的出发点是基于物理中 固体物质 的退火过程与一般 组合优化 问题之间的相似性。模拟退火算法是一种通用的优化算法，其物理退火过程由加温过程、等温过程、冷却过程这三部分组成。
 
-如下图，首先（左图）物体处于非晶体状态。我们将固体加温至充分高（中图），再让其徐徐冷却，也就退火（右图）。加温时，固体内部粒子随温升变为无序状，内能增大，而徐徐冷却时粒子渐趋有序，在每个温度都达到平衡态，最后在常温时达到基态，内能减为最小（此时物体以晶体形态呈现）。</code></pre><p><img src="https://s2.ax1x.com/2019/12/02/Qu5RQP.jpg" alt=""></p>
+如下图，首先（左图）物体处于非晶体状态。我们将固体加温至充分高（中图），再让其徐徐冷却，也就退火（右图）。加温时，固体内部粒子随温升变为无序状，内能增大，而徐徐冷却时粒子渐趋有序，在每个温度都达到平衡态，最后在常温时达到基态，内能减为最小（此时物体以晶体形态呈现）。
+</code></pre><p><img src="https://s2.ax1x.com/2019/12/02/Qu5RQP.jpg" alt=""></p>
 <pre><code>继续考虑寻找f(x)最小值的问题，爬山算法搜索到局部最低点时就会停止搜索，原因是局部最低点左右的值均大于最低点的值。模拟退火算法采用的解决办法是 **以一定的概率** 选择局部最低点两边的点，然后继续搜索，从而脱离局部最优。
 
-上文中的**一定概率**来自于固体退火原理：根据Metropolis准则，粒子在温度T时趋于平衡的概率为e^(-ΔE/(kT))，其中E为温度T时的内能，ΔE为其改变量，k为Boltzmann常数。</code></pre><p><img src="https://s2.ax1x.com/2019/12/03/QKMWes.png" alt=""></p>
+上文中的**一定概率**来自于固体退火原理：根据Metropolis准则，粒子在温度T时趋于平衡的概率为e^(-ΔE/(kT))，其中E为温度T时的内能，ΔE为其改变量，k为Boltzmann常数。
+</code></pre><p><img src="https://s2.ax1x.com/2019/12/03/QKMWes.png" alt=""></p>
 <p>总的来说就是</p>
 <ul>
 <li><p>若f( Y(i+1) ) &lt;= f( Y(i) )  (即移动后得到更优解)，则总是接受该移动；</p>
@@ -454,11 +458,6 @@ height:50vh;
 </ul>
 <p>伪代码：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">* J(y)：在状态y时的评价函数值</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment">* Y(i)：表示当前状态</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">* Y(i+1)：表示新的状态</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">* r： 用于控制降温的快慢</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">* T： 系统的温度，系统初始应该要处于一个高温的状态</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment">* T_min ：温度的下限，若温度T达到T_min，则停止搜索</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment">*/</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>( T &gt; T_min )</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">　　dE = J( Y(i+<span class="number">1</span>) ) - J( Y(i) ) ; </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">　　<span class="keyword">if</span> ( dE &gt;=<span class="number">0</span> ) <span class="comment">//表达移动后得到更优解，则总是接受移动</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">       Y(i+<span class="number">1</span>) = Y(i) ; <span class="comment">//接受从Y(i)到Y(i+1)的移动</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">　　<span class="keyword">else</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">　　&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">       <span class="comment">// 函数exp( dE/T )的取值范围是(0,1) ，dE/T越大，则exp( dE/T )也越大</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">      <span class="keyword">if</span> ( <span class="built_in">exp</span>( -dE/T ) &gt; <span class="built_in">random</span>( <span class="number">0</span> , <span class="number">1</span> ) )</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">      Y(i+<span class="number">1</span>) = Y(i) ; <span class="comment">//接受从Y(i)到Y(i+1)的移动</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">　　&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">　　T = r * T ; <span class="comment">//降温退火 ，0&lt;r&lt;1 。r越大，降温越慢；r越小，降温越快</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">　　<span class="comment">/*若r过大，则搜索到全局最优解的可能会较高，但搜索的过程也就较长。若r过小，则搜索的过程会很快，但最终可能会达到一个局部最优值*/</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    i ++ ;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line"> &#125;</span></pre></td></tr></table></figure>
-
-
-
-
-
 <h2 id="遗传算法-1"><a href="#遗传算法-1" class="headerlink" title="遗传算法"></a>遗传算法</h2><h5 id="一些基本概念"><a href="#一些基本概念" class="headerlink" title="一些基本概念"></a>一些基本概念</h5><pre><code>作为遗传算法生物背景的介绍，下面内容了解即可：
 
 1、基因 ( Gene ) ：一个遗传因子。
@@ -469,13 +468,16 @@ height:50vh;
 
 4、种群(Population)：生物的进化以群体的形式进行，这样的一个群体称为种群。　　
 
-5、遗传与变异：新个体会遗传父母双方各一部分的基因，同时有一定的概率发生基因变异。     </code></pre><p>　　 6、生存竞争，适者生存：对环境适应度高的、牛B的个体参与繁殖的机会比较多，后代就会越来越多。适应度低的个体参与繁殖的机会比较少，后代就会越来越少。    </p>
-<pre><code>简单说来就是：繁殖过程，会发生基因交叉( Crossover ) ，基因突变 ( Mutation ) ，适应度( Fitness )低的个体会被逐步淘汰，而适应度高的个体会越来越多。</code></pre><h5 id="算法流程："><a href="#算法流程：" class="headerlink" title="算法流程："></a>算法流程：</h5><p><img src="https://s2.ax1x.com/2019/12/02/Quo9HS.png" alt=""></p>
+5、遗传与变异：新个体会遗传父母双方各一部分的基因，同时有一定的概率发生基因变异。     
+</code></pre><p>　　 6、生存竞争，适者生存：对环境适应度高的、牛B的个体参与繁殖的机会比较多，后代就会越来越多。适应度低的个体参与繁殖的机会比较少，后代就会越来越少。    </p>
+<pre><code> 简单说来就是：繁殖过程，会发生基因交叉( Crossover ) ，基因突变 ( Mutation ) ，适应度( Fitness )低的个体会被逐步淘汰，而适应度高的个体会越来越多。
+</code></pre><h5 id="算法流程："><a href="#算法流程：" class="headerlink" title="算法流程："></a>算法流程：</h5><p><img src="https://s2.ax1x.com/2019/12/02/Quo9HS.png" alt=""></p>
 <h5 id="具体实现步骤（python）"><a href="#具体实现步骤（python）" class="headerlink" title="具体实现步骤（python）"></a>具体实现步骤（python）</h5><ul>
 <li><p><strong>初始化</strong></p>
 <ul>
 <li><p>首先寻找一种对问题潜在解进行“数字化”编码的方案。（建立表现型和基因型的映射关系）</p>
-<pre><code>![](https://s2.ax1x.com/2019/12/02/QuoFhj.png)</code></pre></li>
+<pre><code>![](https://s2.ax1x.com/2019/12/02/QuoFhj.png)
+</code></pre></li>
 </ul>
 </li>
 <li><p><strong>计算适应度</strong></p>
@@ -541,7 +543,8 @@ height:50vh;
 <p><img src="https://s2.ax1x.com/2019/12/03/QKMmM4.png" alt=""></p>
 </li>
 <li><p>变异</p>
-<pre><code>在后代的生长过程中，它们体内的基因会发生一些变化，使得它们与父母不同。这个过程我们称为「变异」，它可以被定义为染色体上发生的随机变化，正是因为变异，种群中才会存在多样性。</code></pre><p><img src="https://s2.ax1x.com/2019/12/03/QKMEGT.png" alt=""></p>
+<pre><code>在后代的生长过程中，它们体内的基因会发生一些变化，使得它们与父母不同。这个过程我们称为「变异」，它可以被定义为染色体上发生的随机变化，正是因为变异，种群中才会存在多样性。
+</code></pre><p><img src="https://s2.ax1x.com/2019/12/03/QKMEGT.png" alt=""></p>
 </li>
 <li><p>遗传过程</p>
 <p><img src="https://s2.ax1x.com/2019/12/03/QKMJzD.png" alt=""></p>
@@ -820,7 +823,22 @@ jsonContent:
     
         <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
 </html>
 
 
