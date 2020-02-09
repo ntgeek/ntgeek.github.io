@@ -402,9 +402,9 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <p>作者：梁文韬</p>
-<p>http协议在我们的生活中随处可见，只要你上网，不论是浏览网页，听歌，看视频，还是玩游戏，背后总会需要http的支持。</p>
-<h2 id="史前"><a href="#史前" class="headerlink" title="史前"></a>史前</h2><p>​    20世纪60年代，美国国防部高等研究计划署（ARPA）建立了ARPA网，是早期的分组交换网络，也是实现协议套件TCP/IP的第一个网络。（这两项技术成为互联网的技术基础）</p>
-<h2 id="诞生1"><a href="#诞生1" class="headerlink" title="诞生1"></a>诞生<sup><a href="#fn_1" id="reffn_1">1</a></sup></h2><p>​    1989年3月，互联网还只属于少数人。在这互联网的黎明时期，HTTP诞生了。</p>
+<h2 id="HTTP的今生前世"><a href="#HTTP的今生前世" class="headerlink" title="HTTP的今生前世"></a>HTTP的今生前世</h2><p>​    http协议在我们的生活中随处可见，只要你上网，不论是浏览网页，听歌，看视频，还是玩游戏，背后总会需要http的支持。</p>
+<h4 id="史前"><a href="#史前" class="headerlink" title="史前"></a>史前</h4><p>​    20世纪60年代，美国国防部高等研究计划署（ARPA）建立了ARPA网，是早期的分组交换网络，也是实现协议套件TCP/IP的第一个网络。（这两项技术成为互联网的技术基础）</p>
+<h4 id="诞生1"><a href="#诞生1" class="headerlink" title="诞生1"></a>诞生<sup><a href="#fn_1" id="reffn_1">1</a></sup></h4><p>​    1989年3月，互联网还只属于少数人。在这互联网的黎明时期，HTTP诞生了。</p>
 <p>​    CERN（欧洲核子研究组织）的蒂姆·伯纳斯 - 李（Tim Berners-Lee）发表了一篇论文，提出了在互联网上构建超链接文档系统的构想，一种能让远隔两地的研究者们共享知识的构想——借助多文档之间互相关联形成的超文本（HyperText）连成可互相参阅的WWW。</p>
 <p>​    现在已经提出了3项WWW构建技术：</p>
 <ul>
@@ -412,7 +412,7 @@ height:50vh;
 <li>作为文档传递协议的HTTP；</li>
 <li>指定文档所在地址的URL。</li>
 </ul>
-<h2 id="HTTP-0-9-1-0"><a href="#HTTP-0-9-1-0" class="headerlink" title="HTTP 0.9/1.0"></a>HTTP 0.9/1.0</h2><p>​    0.9和1.0这两个版本，就是最传统的request – response的模式了，HTTP 0.9的协议简单到极点，请求时，不支持请求头，只支持<code>GET</code>方法。HTTP 1.0拓展了0.9，其中主要增加了几个变化：</p>
+<h4 id="HTTP-0-9-1-0"><a href="#HTTP-0-9-1-0" class="headerlink" title="HTTP 0.9/1.0"></a>HTTP 0.9/1.0</h4><p>​    0.9和1.0这两个版本，就是最传统的request – response的模式了，HTTP 0.9的协议简单到极点，请求时，不支持请求头，只支持<code>GET</code>方法。HTTP 1.0拓展了0.9，其中主要增加了几个变化：</p>
 <ul>
 <li>在请求中加入了HTTP版本号，如：<code>GET XXX.html HTTP/1.0</code>；</li>
 <li>除了<code>GET</code>方法，还引入了<code>POST</code>和<code>HEAD</code>方法</li>
@@ -427,7 +427,7 @@ height:50vh;
 <li>Status Code 的出现可以让请求双方以及第三方的监控或管理程序有了统一的认识。最关键是还是控制错误和业务错误的分离.</li>
 </ul>
 <p>​    但是，HTTP1.0性能上有一个很大的问题，那就是每请求一个资源都要新建一个TCP链接，而且是串行请求，所以，就算网络变快了，打开网页的速度也还是很慢。所以，HTTP 1.0 应该是一个必需要淘汰的协议了。</p>
-<h2 id="HTTP-1-13"><a href="#HTTP-1-13" class="headerlink" title="HTTP/1.13"></a>HTTP/1.1<sup><a href="#fn_3" id="reffn_3">3</a></sup></h2><p>​    1997年1月正式公布的HTTP/1.1，得到了较大广泛的使用，延续了十余年。其相较于前版本改进主要有一下几个方面：</p>
+<h4 id="HTTP-1-13"><a href="#HTTP-1-13" class="headerlink" title="HTTP/1.13"></a>HTTP/1.1<sup><a href="#fn_3" id="reffn_3">3</a></sup></h4><p>​    1997年1月正式公布的HTTP/1.1，得到了较大广泛的使用，延续了十余年。其相较于前版本改进主要有一下几个方面：</p>
 <ul>
 <li>可以设置 <code>keepalive</code> 来让HTTP重用TCP链接，重用TCP链接可以省了每次请求都要在广域网上进行的TCP的三次握手的巨大开销。这是所谓的“<strong>HTTP 长链接</strong>” 或是 “<strong>请求响应式的HTTP 持久链接</strong>”。英文叫 HTTP Persistent connection.</li>
 <li>支持 Chunked Responses ，也就是说，在Response的时候，不必说明 <code>Content-Length</code> 这样，客户端就不能断连接，直到收到服务端的EOF标识。这种技术又叫 “<strong>服务端Push模型</strong>”，或是 “<strong>服务端Push式的HTTP 持久链接</strong>”</li>
@@ -436,7 +436,7 @@ height:50vh;
 <li>正式加入了 <code>OPTIONS</code> 方法，其主要用于 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank" rel="noopener">CORS – Cross Origin Resource Sharing</a> 应用。</li>
 </ul>
 <p>​    可以看出，虽然HTTP1.1看似是1.0 的修正，但实际上安全性、实用性得到了较大的完善，故其能够创下 十余年被广泛使用的传奇。</p>
-<h2 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h2><p>​    虽然 HTTP/1.1 已经十分完善，但是还是有性能问题，虽然HTTP/1.1 可以重用TCP链接，但是请求还是一个一个串行发的，需要保证其顺序。然而，大量的网页请求中都是些资源类的东西，这些东西占了整个HTTP请求中最多的传输数据量。所以，理论上来说，如果能够并行这些请求，那就会增加更大的网络吞吐和性能。</p>
+<h4 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h4><p>​    虽然 HTTP/1.1 已经十分完善，但是还是有性能问题，虽然HTTP/1.1 可以重用TCP链接，但是请求还是一个一个串行发的，需要保证其顺序。然而，大量的网页请求中都是些资源类的东西，这些东西占了整个HTTP请求中最多的传输数据量。所以，理论上来说，如果能够并行这些请求，那就会增加更大的网络吞吐和性能。</p>
 <p>​    另外，HTTP/1.1传输数据时，是以文本的方式，借助耗CPU的zip压缩的方式减少网络带宽，但是耗了前端和后端的CPU。这也是为什么很多RPC协议诟病HTTP的一个原因，就是数据传输的成本比较大。</p>
 <p>​    此版本与HTTP/1.1区别主要是：<sup><a href="#fn_4" id="reffn_4">4</a></sup></p>
 <ul>
@@ -444,15 +444,15 @@ height:50vh;
 <li><strong>HPACK算法</strong>。是HTTP/2.0新引入的一个算法，用于对HTTP头部做压缩。如果你同时发出多个请求，他们的头是一样的或是相似的，那么，协议会帮你消除重复的部分。</li>
 <li><strong>服务器推送</strong>。 网站为了使请求数减少，通常采用对页面上的图片、脚本进行极简化处理。但是，这一举措十分不方便，也不高效，依然需要诸多HTTP链接来加载页面和页面资源。HTTP/2引入了服务器推送，即服务端向客户端发送比客户端请求更多的数据。这允许服务器直接提供浏览器渲染页面所需资源，而无须浏览器在收到、解析页面后再提起一轮请求，节约了加载时间。 </li>
 </ul>
-<p>​    HTTP/2 是2015年推出的，其发布后，Google 宣布移除对SPDY的支持，拥抱标准的 HTTP/2。过了一年后，就有8.7%的网站开启了HTTP/2，根据 <a href="https://w3techs.com/technologies/details/ce-http2/all/all" target="_blank" rel="noopener">报告</a> ，截止至本文发布时（2019年10月1日 ）， 在全世界范围内已经有41%的网站开启了HTTP/2。</p>
-<h2 id="HTTP-3"><a href="#HTTP-3" class="headerlink" title="HTTP/3"></a>HTTP/3</h2><p>​    在HTTP/3中，将弃用TCP协议，改为使用基于UDP协议的QUIC协议实现。QUIC（快速UDP网络连接）是一种实验性的传输层网络传输协议，由Google开发，该协议旨在取代TCP协议，使网页传输更快。</p>
+<p>​    HTTP/2 是2015年推出的，其发布后，Google 宣布移除对SPDY的支持，拥抱标准的 HTTP/2。过了一年后，就有8.7%的网站开启了HTTP/2，根据 <a href="https://w3techs.com/technologies/details/ce-http2/all/all" target="_blank" rel="noopener">报告</a> ，截止至2019年10月， 在全世界范围内已经有41%的网站开启了HTTP/2。</p>
+<h4 id="HTTP-3"><a href="#HTTP-3" class="headerlink" title="HTTP/3"></a>HTTP/3</h4><p>​    在HTTP/3中，将弃用TCP协议，改为使用基于UDP协议的QUIC协议实现。QUIC（快速UDP网络连接）是一种实验性的传输层网络传输协议，由Google开发，该协议旨在取代TCP协议，使网页传输更快。</p>
 <p>​    </p>
 <p>​    这牵涉到一个叫<a href="https://en.wikipedia.org/wiki/Head-of-line_blocking" target="_blank" rel="noopener">Head-of-Line Blocking</a>的问题，这也是一个比较经典的流量调度的问题。这是由于tcp的特性引发的问题。这个问题最早主要的发生的交换机上。下图来自Wikipedia。</p>
 <p><img src="https://coolshell.cn/wp-content/uploads/2019/10/HOL_blocking.png" alt="img"></p>
 <p>图中，左边的是输入队列，其中的1，2，3，4表示四个队列，四个队列中的1，2，3，4要去的右边的output的端口号。此时，第一个队列和第三个队列都要写右边的第四个端口，然后，一个时刻只能处理一个包，所以，一个队列只能在那等另一个队列写完后。然后，其此时的3号或1号端口是空闲的，而队列中的要去1和3号端号的数据，被第四号端口给block住了。这就是所谓的HOL blocking问题。<sup><a href="#fn_5" id="reffn_5">5</a></sup></p>
 <p>HTTP/1.1中的<a href="https://baike.baidu.com/item/HTTP%E7%AE%A1%E7%BA%BF%E5%8C%96/23217393?fr=aladdin" target="_blank" rel="noopener">pipeline</a>中如果有一个请求block了，那么队列后请求也统统被block住了；HTTP/2 多请求复用一个TCP连接，一旦发生丢包，就会block住所有的HTTP请求。这样的问题很讨厌。好像基本无解了。</p>
 <p>是的TCP是无解了，但是UDP是有解的 ！<strong>于是HTTP/3破天荒地把HTTP底层的TCP协议改成了UDP。</strong></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ol>
 <li>http协议始于三十年前蒂姆·伯纳斯 - 李的一篇论文；</li>
 <li>http/0.9是个简单的文本传输协议，只能获取文本资源；</li>
 <li>http/1.1是目前使用最广泛的协议，功能也十分完善；</li>
@@ -483,7 +483,7 @@ height:50vh;
             <p>Author：<a href="http://ntgeek.github.io">Geek</a>
             <p>原文链接：<a href="http://ntgeek.github.io/posts/86235.html">http://ntgeek.github.io/posts/86235.html</a>
             <p>发表日期：<a href="http://ntgeek.github.io/posts/86235.html">February 8th 2020, 9:57:28 am</a>
-            <p>更新日期：<a href="http://ntgeek.github.io/posts/86235.html">February 8th 2020, 10:52:40 am</a>
+            <p>更新日期：<a href="http://ntgeek.github.io/posts/86235.html">February 9th 2020, 2:00:42 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -630,7 +630,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#史前"><span class="toc-number">1.</span> <span class="toc-text">史前</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#诞生1"><span class="toc-number">2.</span> <span class="toc-text">诞生1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-0-9-1-0"><span class="toc-number">3.</span> <span class="toc-text">HTTP 0.9/1.0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-1-13"><span class="toc-number">4.</span> <span class="toc-text">HTTP/1.13</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-2"><span class="toc-number">5.</span> <span class="toc-text">HTTP/2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-3"><span class="toc-number">6.</span> <span class="toc-text">HTTP/3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP的今生前世"><span class="toc-number">1.</span> <span class="toc-text">HTTP的今生前世</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#史前"><span class="toc-number">1.0.1.</span> <span class="toc-text">史前</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#诞生1"><span class="toc-number">1.0.2.</span> <span class="toc-text">诞生1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-0-9-1-0"><span class="toc-number">1.0.3.</span> <span class="toc-text">HTTP 0.9/1.0</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-1-13"><span class="toc-number">1.0.4.</span> <span class="toc-text">HTTP/1.13</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-2"><span class="toc-number">1.0.5.</span> <span class="toc-text">HTTP/2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-3"><span class="toc-number">1.0.6.</span> <span class="toc-text">HTTP/3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-number">1.0.7.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -731,9 +731,9 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="服务器"><span class="iconfont-archer">&#xe606;</span>服务器</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="计算机科普"><span class="iconfont-archer">&#xe606;</span>计算机科普</span>
     
