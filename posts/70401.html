@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Geek">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Geek">
+    
+    <meta name="keywords" content="新思路Geek组博客,newthread-geek,Geek组博客,极客组博客,Geek组博客">
+    
+    <meta name="description" content="中南民族大学新思路团队Geek组博客">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>元胞自动机及其应用 · Geek组博客</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Newthread-Geek&#39;s Studio.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">元胞自动机及其应用</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Newthread-Geek's Studio.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            元胞自动机及其应用
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" target="_blank" rel="noopener" data-tags = "算法">算法</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count word-count">7k</span>Reading time: <span class="post-count reading-time">27 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/02/29</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>作者：卢姿奕</p>
+<h2 id="引文"><a href="#引文" class="headerlink" title="引文"></a>引文</h2><p>元胞自动机有着重要的理论价值和实际运用价值这一说法或许来自于它本身<strong>以计算机建模和仿真的方法研究由类似于生物细胞的大量并行单元个体组成的复杂系统的宏观行为与规律</strong> 这一特性。</p>
+<p>简单来说，假设现在要对一个真实世界进行建模，首先最容易想到的方法就是把真实世界打上很多离散的格子，每个格子上可能处在不同的状态，而这些状态会遵循一定规律发生演化，以此来完成一个行为的建模。广义上就是将一个问题抽象成离散的格点的改变，这种状态的改变是受附近格点的状态（或者自己的状态和周围格点的历史状态）所影响，这之间存在着一些耦合。而重点在于<strong>它是存在着非线性的，真正意义上的元胞自动机是由混沌所主导</strong>。</p>
+<p>在20 世纪 80 年代 ,  以美国圣塔菲 (Santa Fe)学派为首提出了复杂科学，“ 元胞间如此简单的局部相互作用组成的系统为何会产生复杂的计算过程, 而且会突现出某种未知的模式?”</p>
+<p>在复杂性和复杂系统的研究过程中 , 国内外学者提出了许多探索复杂性的方法及工具 , 其中, 元胞自动机 以其组成单元的简单规则性, 单元之间作用的局部性和信息处理的高度并行性, 并表现出复杂的全局性等特点而备受关注, 成为探索复杂系统的一种有效工具。</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>惯例来看个中文维基：</p>
+<blockquote>
+<p><strong>细胞自动机</strong>（英语：Cellular automaton），又称<strong>格状自动机</strong>、<strong>元胞自动机</strong>，是一种离散模型，在可计算性理论、数学及理论生物学都有相关研究。它是由无限个有规律、坚硬的方格组成，每格均处于一种有限状态。整个格网可以是任何有限维的。同时也是离散的。每格于t时的态由t-1时的一集有限格（这集叫那格的邻域）的态决定。每一格的“邻居”都是已被固定的。（一格可以是自己的邻居）每次演进时，每格均遵从同一规矩一齐演进。</p>
+</blockquote>
+<p>所以，元胞自动机到底是什么</p>
+<p>简单来讲，</p>
+<p>元胞自动机就是</p>
+<p>采用离散的空间布局和时间间隔，</p>
+<p><img src="https://i.loli.net/2020/02/27/PEbnmG6MlkROucQ.jpg" alt="离散空间布局.jpg"></p>
+<p>将元胞分成有限种状态，</p>
+<p><img src="https://i.loli.net/2020/02/27/tZolQ1P2Cgaj4TR.jpg" alt="细胞有限状态.jpg"></p>
+<p>元胞个体状态的演变，仅与其当前状态以及其某个局部邻域的状态有关。</p>
+<p><img src="https://i.loli.net/2020/02/27/JXxr124tpokGaOv.jpg" alt="领域状态.jpg"></p>
+<p>再换个方式讲，</p>
+<p>元胞就是，</p>
+<p>构成元胞自动机的基本组成单位，</p>
+<p>是元胞所分布的空间网点集合。</p>
+<p>而自动机，</p>
+<p>通常指不需要人们逐步进行操作指导的设备(夏培肃，1984)，</p>
+<p>能按照实现安排好的操作步骤自动的运行，</p>
+<p>计算机自动响应人工编制的各种编码指令完成各种复杂的分析与计算。</p>
+<p><img src="https://i.loli.net/2020/02/27/uJyTWLoiPNaK96l.png" alt="自动机.png" style="zoom: 67%;" /></p>
+<h2 id="基本组成"><a href="#基本组成" class="headerlink" title="基本组成"></a>基本组成</h2><p>从数学上定义，一个标准的元胞自动机是一个五元组：(参考：元胞自动机 :一种探索管理系统复杂性的有效工具)</p>
+<script type="math/tex; mode=display">
+A=(L,d,S,N,f)</script><ul>
+<li><p>A：代表一个元胞自动机系统；</p>
+</li>
+<li><p>L：表示元胞空间，即元胞在空间分布的空间格点集合。还有，理论上，元胞空间是无限的，实际应用中无法达到这一理想条件。常用的边界条件有以下几种：周期型、定值型、绝热型、反射型；</p>
+</li>
+<li><p>d：表示元胞自动机内元胞空间的维数，常用的CA通常是一维二维的；</p>
+</li>
+<li><p>S：元胞有限的 、 离散的状态集合,通常是二进制形式。在某一个时刻一个元胞通常只能有一种元胞状态, 而且该状态取自一个有限集合 , 如 {0, 1},{生, 死}或 {0, a 1 , a 2 , a n }；</p>
+</li>
+<li><p>N： 表示某个邻域内所有元胞的集合。空间位置上与元胞相邻的细胞称为它的邻元, 由所有邻元组成的区域称为它的邻域。例如，在一维元胞自动机中 , 通常以半径 r 来确定邻域, 距离某个元胞 r 内的所有元胞均被认为是该元胞的邻域；</p>
+<p><img src="https://i.loli.net/2020/02/27/Rex2VBtWq5TEkHC.png" alt="领域.png"></p>
+</li>
+<li><p>f：表示局部映射或局部规则。根据元胞当前状态及其邻居状况确定下一时刻该元胞状态的动力学函数，简单来说就是一个状态转移函数。</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+f:S^{t+1}_{i}=f(S^{t}_{i},S^{t}_{N})</script><h2 id="生命游戏"><a href="#生命游戏" class="headerlink" title="生命游戏"></a>生命游戏</h2><p>既然是要讲元胞自动机，那就免不了提及“生命的游戏”。</p>
+<p>1970 年 , 剑桥大学的 J.H .Conway 设计了这种计算机游戏。它是具有产生动态图案和动态结构能力的元胞自动机模型 , 吸引了众多科学家的兴趣 , 推动了元胞自动机研究的迅速发展 。</p>
+<p>这里还是用同样的公式</p>
+<script type="math/tex; mode=display">
+A=(L,d,S,N,f)</script><ul>
+<li><p>A：生命游戏 (Came of Life)；</p>
+</li>
+<li><p>L：规则划分的网格集合，元胞就分布在这些网格上；</p>
+</li>
+<li><p>d：属于二维模型；</p>
+</li>
+<li><p>S：元胞具有0，1两种状态，0代表”死”，1代表”生”，在格子上以黑白两种状态呈现；</p>
+</li>
+<li><p>N：元胞以相邻的8个元胞为邻居；</p>
+</li>
+<li><p>f：每个元胞的下一回合状态是由 “其当前状态和它周围8个元胞的状态而定”，按以下三规则进行演化：</p>
+<ul>
+<li>死细胞（白格）周围如果恰好有3个活细胞则会诞生新的活细胞；</li>
+<li>活元胞（黑格）周围如果有2或3个活细胞可以继续存活；</li>
+<li>活元胞（黑格）周围的活细胞数如果小于2个或多于3个则会死亡；（寂寞或拥挤）</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/28/Qu75BgstLYUkzV1.png" alt="生命游戏.png"></p>
+</li>
+</ul>
+<p>网页版: <a href="https://funnyjs.com/jspages/game-of-life.html" target="_blank" rel="noopener">game-of-life</a></p>
+<h2 id="代码（MATLAB"><a href="#代码（MATLAB" class="headerlink" title="代码（MATLAB)"></a>代码（MATLAB)</h2><p>实现的算法有很多，这里随便列出一例讲讲，</p>
+<p>代码 <del>照搬</del> 参考：<a href="https://blog.csdn.net/slandarer/article/details/88026013?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">https://blog.csdn.net/slandarer/article/details/88026013?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task</a></p>
+<h3 id="核心代码："><a href="#核心代码：" class="headerlink" title="核心代码："></a>核心代码：</h3><p>1）在原矩阵的基础上，建立一个新矩阵<code>NewA</code>,<code>NewA</code>中每个元素的值为领域内所有元素的和；</p>
+<p><img src="https://i.loli.net/2020/02/29/P527YUNqxnIFE4V.png" alt="生命游戏（1）.png"></p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">chang=<span class="built_in">length</span>(sum(A,<span class="number">2</span>));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="comment">%具体操作是将A经平移后的8次的结果相加。（相对的将相邻元胞的位置移动到中心，由于有8个相邻元素所以有8个结果）</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">B1=[A;<span class="built_in">zeros</span>(<span class="number">1</span>,chang)];B1(<span class="number">1</span>,:)=[];B2=[<span class="built_in">zeros</span>(<span class="number">1</span>,chang);A];B2(<span class="keyword">end</span>,:)=[];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">B3=[<span class="built_in">zeros</span>(chang,<span class="number">1</span>),A];B3(:,<span class="keyword">end</span>)=[];B4=[A,<span class="built_in">zeros</span>(chang,<span class="number">1</span>)];B4(:,<span class="number">1</span>)=[];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">C1=[<span class="built_in">zeros</span>(chang,<span class="number">1</span>),B1];C1(:,<span class="keyword">end</span>)=[];C2=[B1,<span class="built_in">zeros</span>(chang,<span class="number">1</span>)];C2(:,<span class="number">1</span>)=[];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">C3=[<span class="built_in">zeros</span>(chang,<span class="number">1</span>),B2];C3(:,<span class="keyword">end</span>)=[];C4=[B2,<span class="built_in">zeros</span>(chang,<span class="number">1</span>)];C4(:,<span class="number">1</span>)=[];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="comment">%将8个结果相加得到NewA</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">NewA=B1+B2+B3+B4+C1+C2+C3+C4;</span></pre></td></tr></table></figure>
+<p>2）建立一个新矩阵<code>progressA</code>，由<code>NewA</code>先来确定存活的元胞；</p>
+<p><img src="https://i.loli.net/2020/02/29/JxfrAY2jpZ53il7.png" alt="生命游戏2.png"></p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">progressA=<span class="built_in">zeros</span>(chang,chang);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">progressA(NewA==<span class="number">3</span>)=<span class="number">1</span>;</span></pre></td></tr></table></figure>
+<p>3）原本存活的元胞，若周围元胞数为2，继续存活；</p>
+<p><img src="https://i.loli.net/2020/02/29/OjVeD1ZlLvQu9PB.png" alt="生命游戏_3_.png"></p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">t3=<span class="built_in">find</span>(NewA==<span class="number">2</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">t2=<span class="built_in">find</span>(A==<span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">[lalala,~,~]=<span class="built_in">intersect</span>(t3,t2);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">progressA(lalala)=<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">A=progressA;</span></pre></td></tr></table></figure>
+<h3 id="完整代码："><a href="#完整代码：" class="headerlink" title="完整代码："></a>完整代码：</h3><p>只是补充了一些注释，写进一个.m文件直接运行就可</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CA</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    n=<span class="number">50</span>;   <span class="comment">%棋盘宽度</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">%对坐标图像进行设置。（刻度、背景颜色）</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    axis equal    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    axis([<span class="number">0</span>,n,<span class="number">0</span>,n])     </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    set(gca,<span class="string">'xtick'</span>,[],<span class="string">'ytick'</span>,[],<span class="string">'xcolor'</span>,<span class="string">'w'</span>,<span class="string">'ycolor'</span>,<span class="string">'w'</span>) </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    set(gca,<span class="string">'color'</span>,<span class="string">'w'</span>)  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    <span class="built_in">hold</span> on</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line"> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">    A=<span class="built_in">zeros</span>(n,n);   <span class="comment">%生成矩阵A。元素值要么是1要么是0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    [a,b]=<span class="built_in">find</span>(A(:,:)==<span class="number">1</span>);  <span class="comment">%返回A中活元胞的位置（行和列）</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    B=[b,<span class="built_in">length</span>(sum(A,<span class="number">2</span>))-a];    <span class="comment">%活元胞坐标,列向量操作是为了于标记 x 同步</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">    postion=[<span class="built_in">floor</span>(n/<span class="number">2</span>),<span class="built_in">floor</span>(n/<span class="number">2</span>)];    <span class="comment">% x 标记初始位置</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    control=<span class="number">1</span>;  <span class="comment">%初始化运行状态。2开始，1暂停</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    plotl=<span class="built_in">scatter</span>(gca,B(:,<span class="number">1</span>),B(:,<span class="number">2</span>),<span class="number">1200</span>/n,<span class="string">'s'</span>,<span class="string">'filled'</span>);   <span class="comment">%将B中所有坐标的点用o画出来</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    plotpostion=<span class="built_in">scatter</span>(gca,postion(<span class="number">1</span>,<span class="number">1</span>),postion(<span class="number">1</span>,<span class="number">2</span>),<span class="number">150</span>,<span class="string">'kx'</span>);    <span class="comment">%设置x的位置</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">    set(gcf, <span class="string">'KeyPressFcn'</span>, @key)  <span class="comment">%设置键盘操作                                                   </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    fps = <span class="number">20</span>;                                    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    game = timer(<span class="string">'ExecutionMode'</span>, <span class="string">'FixedRate'</span>, <span class="string">'Period'</span>,<span class="number">1</span>/fps, <span class="string">'TimerFcn'</span>, @lifeGame);<span class="comment">%设置图像变化</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    start(game) </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    set(gcf,<span class="string">'tag'</span>,<span class="string">'co'</span>,<span class="string">'CloseRequestFcn'</span>,@clo);<span class="comment">%结束游戏</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">clo</span><span class="params">(~,~)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">        stop(game)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">        delete(findobj(<span class="string">'tag'</span>,<span class="string">'co'</span>))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">        clf</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">        close</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">end</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">lifeGame</span><span class="params">(~,~)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">        <span class="comment">% 考虑到标志 x 超出边界情况</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">        chang=<span class="built_in">length</span>(sum(A,<span class="number">2</span>));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">        postion(postion&gt;chang)=postion(postion&gt;chang)-chang;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">        postion(postion&lt;<span class="number">1</span>)=postion(postion&lt;<span class="number">1</span>)+chang;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">        </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> control==<span class="number">2</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">            B1=[A;<span class="built_in">zeros</span>(<span class="number">1</span>,chang)];B1(<span class="number">1</span>,:)=[];B2=[<span class="built_in">zeros</span>(<span class="number">1</span>,chang);A];B2(<span class="keyword">end</span>,:)=[];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">            B3=[<span class="built_in">zeros</span>(chang,<span class="number">1</span>),A];B3(:,<span class="keyword">end</span>)=[];B4=[A,<span class="built_in">zeros</span>(chang,<span class="number">1</span>)];B4(:,<span class="number">1</span>)=[];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line">            C1=[<span class="built_in">zeros</span>(chang,<span class="number">1</span>),B1];C1(:,<span class="keyword">end</span>)=[];C2=[B1,<span class="built_in">zeros</span>(chang,<span class="number">1</span>)];C2(:,<span class="number">1</span>)=[];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line">            C3=[<span class="built_in">zeros</span>(chang,<span class="number">1</span>),B2];C3(:,<span class="keyword">end</span>)=[];C4=[B2,<span class="built_in">zeros</span>(chang,<span class="number">1</span>)];C4(:,<span class="number">1</span>)=[];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line">            NewA=B1+B2+B3+B4+C1+C2+C3+C4;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">            progressA=<span class="built_in">zeros</span>(chang,chang);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">46</span></pre></td><td class="code"><pre><span class="line">            progressA(NewA==<span class="number">3</span>)=<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">47</span></pre></td><td class="code"><pre><span class="line">            t3=<span class="built_in">find</span>(NewA==<span class="number">2</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">48</span></pre></td><td class="code"><pre><span class="line">            t2=<span class="built_in">find</span>(A==<span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">49</span></pre></td><td class="code"><pre><span class="line">            [lalala,~,~]=<span class="built_in">intersect</span>(t3,t2);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">50</span></pre></td><td class="code"><pre><span class="line">            progressA(lalala)=<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">51</span></pre></td><td class="code"><pre><span class="line">            A=progressA;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">52</span></pre></td><td class="code"><pre><span class="line">            [a,b]=<span class="built_in">find</span>(A(:,:)==<span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">53</span></pre></td><td class="code"><pre><span class="line">            B=[b,<span class="built_in">length</span>(sum(A,<span class="number">2</span>))-a];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">54</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">end</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">55</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> control==<span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">56</span></pre></td><td class="code"><pre><span class="line">            [a,b]=<span class="built_in">find</span>(A(:,:)==<span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">57</span></pre></td><td class="code"><pre><span class="line">            B=[b,<span class="built_in">length</span>(sum(A,<span class="number">2</span>))-a]; </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">58</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">end</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">59</span></pre></td><td class="code"><pre><span class="line">        set(plotl,<span class="string">'XData'</span>,B(:,<span class="number">1</span>),<span class="string">'YData'</span>,B(:,<span class="number">2</span>))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">60</span></pre></td><td class="code"><pre><span class="line">        set(plotpostion,<span class="string">'XData'</span>,postion(<span class="number">1</span>,<span class="number">1</span>),<span class="string">'YData'</span>,postion(<span class="number">1</span>,<span class="number">2</span>))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">61</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">end</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">62</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">63</span></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">key</span><span class="params">(~,event)</span></span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">64</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">switch</span> event.Key</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">65</span></pre></td><td class="code"><pre><span class="line">            <span class="comment">%上下左右操作</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">66</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'uparrow'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">67</span></pre></td><td class="code"><pre><span class="line">                postion=postion+[<span class="number">0</span>,<span class="number">1</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">68</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'downarrow'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">69</span></pre></td><td class="code"><pre><span class="line">                postion=postion+[<span class="number">0</span>,<span class="number">-1</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">70</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'leftarrow'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">71</span></pre></td><td class="code"><pre><span class="line">                postion=postion+[<span class="number">-1</span>,<span class="number">0</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">72</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'rightarrow'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">73</span></pre></td><td class="code"><pre><span class="line">                postion=postion+[<span class="number">1</span>,<span class="number">0</span>];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">74</span></pre></td><td class="code"><pre><span class="line">            <span class="comment">%设置初始元胞操作</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">75</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'space'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">76</span></pre></td><td class="code"><pre><span class="line">                A(<span class="built_in">length</span>(sum(A,<span class="number">2</span>))-postion(<span class="number">1</span>,<span class="number">2</span>),postion(<span class="number">1</span>,<span class="number">1</span>))=<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">77</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'backspace'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">78</span></pre></td><td class="code"><pre><span class="line">                A(<span class="built_in">length</span>(sum(A,<span class="number">2</span>))-postion(<span class="number">1</span>,<span class="number">2</span>),postion(<span class="number">1</span>,<span class="number">1</span>))=<span class="number">0</span>;  </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">79</span></pre></td><td class="code"><pre><span class="line">            <span class="comment">%b开始；c暂停；a清空</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">80</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'b'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">81</span></pre></td><td class="code"><pre><span class="line">                control=<span class="number">2</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">82</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'c'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">83</span></pre></td><td class="code"><pre><span class="line">                control=<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">84</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">case</span> <span class="string">'a'</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">85</span></pre></td><td class="code"><pre><span class="line">                A=<span class="built_in">zeros</span>(<span class="number">100</span>,<span class="number">100</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">86</span></pre></td><td class="code"><pre><span class="line">                control=<span class="number">1</span>;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">87</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">end</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">88</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">end</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">89</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">end</span></span></pre></td></tr></table></figure>
+<h3 id="运行结果："><a href="#运行结果：" class="headerlink" title="运行结果："></a>运行结果：</h3><p><img src="https://i.loli.net/2020/02/29/M7vnP4Oh13J9CuQ.gif" alt="运行结果.gif"></p>
+<p><img src="https://i.loli.net/2020/02/29/tYiM2zujNgGyIBq.gif" alt="运行结果2.gif"></p>
+<h2 id="复杂性科学革命"><a href="#复杂性科学革命" class="headerlink" title="复杂性科学革命"></a>复杂性科学革命</h2><p>接引言，来谈谈物理学四大神兽之一：拉普拉斯妖</p>
+<p><img src="https://i.loli.net/2020/02/27/hGzow7UWidgKc4N.jpg" alt="拉普拉斯.jpg" style="zoom: 33%;" /></p>
+<blockquote>
+<pre><code>    **“ We may regard the present state of the universe as the effect of its past and the cause of its future. An intellect which at a certain moment would know all forces that set nature in motion, and all positions of all items of which nature is composed, if this intellect were also vast enough to submit these data to analysis, it would embrace in a single formula the movements of the greatest bodies of the universe and those of the tiniest atom; for such an intellect nothing would be uncertain and the future just like the past would be present before its eyes.”**
+
+    ***“我们可以把宇宙现在的状态视为其历史的果，和未来的因。如果存在这么一个智慧，它在某一时刻，能够获知驱动这个自然运动的所有的力，以及组成这个自然的所有物体的位置，并且这个智慧足够强大，可以把这些数据进行分析，那么宇宙之中从最宏大的天体到最渺小的原子都将包含在一个运动方程之中；对这个智慧而言，未来将无一不确定，恰如历史一样，在它眼前一览无遗 ”***
+</code></pre></blockquote>
+<p>法国数学家拉普拉斯在1814年提出一个这样的科学假设：</p>
+<p>假若宇宙间存在一只”妖怪“，某一时刻，它对整个时空——小到一粒沙大到一座星系——所有物体位置和受力情况了如指掌，那么就可以借助力学定律，推导出宇宙任意时期的样貌，无论是过去还是未来。</p>
+<p>在19世纪，古老的牛顿力学虽饱经磨砺但毅力不倒，经典力学在描述世界上产生了巨大的成功（1846年海王星的发现便是它取得的伟大成就之一），人们逐渐相信世界物是物理定律机械地描述的，而拉普拉斯之妖便是其中比较典型的一个。</p>
+<p>于此同时，由其引出的一个哲学命题——<strong>决定论</strong>，也基本上统治了19世纪的科学界。它认为，一切都是有“因果关系”联系起来的，一切世界的运动都是由确定的规律决定的。这一观点得到了包括爱因斯坦在内的许多科学家支持。爱因斯坦曾经在给波尔的一封信中写道：”你信仰投骰子的上帝，我却信仰完备的定律和秩序。“</p>
+<p>然而，这只妖怪并没有迷惑物理学家很久。1927年不确定原性理的提出和之后的混沌理论基本否决了“一个可预知的未来存在”的可能性，而随后量子力学的崛起也从根本上颠覆了经典决定论。</p>
+<p>在分子这个层面上，所有的活细胞都惊人地相似，它们的基本机制具有普遍的意义。但在整幅基因蓝图中，哪怕有一个微乎其微的变化，就足以给整个生物体带来巨大的变化。当你观察大量简单的原子和分子如何相互作用，就会发现类似生物学的现象：最初的微小变化会导致全然不同的结果，简单的动力能够产生令人震惊的复杂行为。少量的物质所能够产生的特定模型几乎是无穷无尽的。</p>
+<p>  物理学家们研究的系统相对要简单得多，可以用严格的数学公式来分析。</p>
+<p>  自我组织有赖于自我加强：在条件成熟的情况下，微小的事件会被扩大和发展，而不是趋于消失。这正是雅各布和莫纳德在DNA 研究中发现的现象。工程学领域把这种现象称为正反馈，弱小的分子运动会演变成细胞的对流运动、和煦的热带风能够汇聚成飓风、种子和胚胎能够成长为完全成熟的活生物。正反馈似乎是产生变化、意外事件、甚至生命本身的必不可少的条件。</p>
+<p>到八十年代初，科学家开始认识到，许多混乱而复杂的系统可以被一种强大的理论描述成“非线性动力学”（nonlineardynamics）。在这个过程中，科学家们被迫面对一个令他们窘困的事实：整体真的可以大于部分相加的总和。</p>
+<p>  大自然中的许多事情都是线性运作的。声音是一个线性系统，光线也是一个线性系统，……在某些方面，甚至连经济也是一个线性系统，比方小经济单位可以独立运作。</p>
+<p>  然而，大自然中的许多事情确实不是线性的，这包括使这个世界充满趣味的大多数事情。……经济也并非真是线性系统。数百万的个人做出的买或不买的决定可以相互影响，从而导致经济繁荣或萧条。而经济气候反过来又会影响到导致这种气候的购买力。确实，除了非常简单的物理系统外，世界上几乎所有的事情、所有的人都被裹罩在一张充满刺激、限制和相互关系的巨大的非线性大网之中。一个地方小小的变化会导致其它所有地方的震荡，就像T．S.艾略特所说的那样，我们无法不扰乱宇宙。整体几乎永远是远远大于部分的总和。</p>
+<p>  但最令人吃惊的是被称为混沌的非线性现象。在人类的日常活动中，没有人会因为听说这儿发生的一件小事会对那儿发生巨大影响而吃惊。但是，当物理学家开始在他们的学科领域对非线性系统给予高度重视时，他们才开始认识到，支配非线性系统的规律有多么深奥。产生风流和潮气的方程式看上去极其简单。比如，研究人员现在才认识到，德克萨斯州一只蝴蝶翅膀的扇动，一个星期以后会影响到海地的一场雷暴雨的走向。或者，蝴蝶翅膀扇动朝左一毫米也许会整个改变雷暴雨的方向。这一个又一个的例子都表明了一个相同的意思：即一切都是相互关联的，这样的关联敏感到令人不可思议的地步。微小的不可测性不会总是很微小。在适当的条件下，最小的不确定性可以发展到令整个系统的前景完全不可预测——或用另一个词来形容：混沌。</p>
+<p>  研究人员也开始认识到，即使是一些很简单的系统也会产生丰富到令人震惊的行为模式。所有这些只需要有一点点非线性因素。</p>
+<p>既然是要讲元胞自动机，那就免不了提及“生命的游戏”。</p>
+<p>1970 年 , 剑桥大学的 J.H .Conway 设计了这种计算机游戏。它是具有产生动态图案和动态结构能力的元胞自动机模型 , 吸引了众多科学家的兴趣 , 推动了元胞自动机研究的迅速发展 。</p>
+<p>  “人们认识到，逻辑和哲学是混乱的、语言是混乱的、化学动力学是混乱的、物理学是混乱的、因此经济自然也是混乱的。这种混乱并不是显微镜下的尘土所造成的，而是这些系统本身所固有的。你无法抓住它们，把它们限制在一个洁净的逻辑之盒中。”结果就爆发了复杂性科学的革命。从某种意义上来说，这场革命是针对还原论而来。</p>
+<h2 id="元胞自动机特征"><a href="#元胞自动机特征" class="headerlink" title="元胞自动机特征"></a>元胞自动机特征</h2><p>同刚刚的“生命游戏”一样，元胞自动机是由一些特定规则的格子组成，每个格子看做是一个细胞，每个细胞可以具有一系列状态，但在某一时刻只能处于一种状态之中。随着时间变化（我们称作「迭代」过程），格子上的每一个细胞根据周围的细胞的情形，按照相同的法则而改变状态，换句话说，一个细胞状态是由上一时刻所围绕的细胞状态所决定的。</p>
+<p>以人工生命角度看，细胞自动机可视为让许多单细胞生物生活的世界，在我们设定好世界初始状态之后，它们便按照一个规则做演化。</p>
+<p>在细胞活动的空间上，细胞自动机可以是一维的、二维的、三维的、甚至更高维。透过不同的规则设计，细胞自动机可以呈现无限多样性，其中最让人惊讶的是一些细胞自动机可以产生存在于大自然的景象，贝壳上的图案、雪花结晶等。细胞自动机中的细胞就像有机生物一般、有移动、成长、衰亡与自我复制等类似行为。</p>
+<p>就形式而言，细胞自动机有三种特征：</p>
+<ul>
+<li>平行计算（parallel computation）：每一个细胞个体都同时同步变化；</li>
+<li>局部性（local）：细胞的状态变化只受周围细胞影响；</li>
+<li>一致性（homogeneous）：所有细胞均受同样规则支配；</li>
+</ul>
+<p>这与我们的宇宙理论上的确有很多相似的地方，如同上面的三个特征：宇宙是平行处理的、宇宙中每一点受邻接状态的影响最大、宇宙各处遵循同样的自然规律。虽然与宇宙相比，细胞自动机的规则过于简单，但它里边蕴含的道理可能与宇宙机制是相通的。</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h3 id="一、模拟森林火灾"><a href="#一、模拟森林火灾" class="headerlink" title="一、模拟森林火灾"></a>一、模拟森林火灾</h3><p>同样的公式</p>
+<script type="math/tex; mode=display">
+A=(L,d,S,N,f)</script><ul>
+<li>A：模拟森林火灾模型；</li>
+<li>L：规则划分的网格集合，代表每棵树的位置；</li>
+<li>d：属于二维模型；</li>
+<li>S：元胞有 3 个不同的状态。状态为 0 是空位，状态 1 是燃烧着的树木，状态 2 是树木；</li>
+<li>N：元胞以相邻的4个元胞为邻居（上下左右）；</li>
+<li>f：按照以下5个规则进行演化：<ul>
+<li>如果四个邻居中有一个或者一个以上的树木是燃烧状态（状态为1）并且自身也是树木（状态为2），则下一时刻的状态是燃烧（状态为1）；</li>
+<li>树木元胞（状态为 2 ）以一个低概率（例如 0.000005 ）开始烧（因为闪电）；</li>
+<li>空元胞以一个低概率（例如 0.01 ）变为森林以模拟生长；</li>
+<li>出于矩阵边界连接的考虑，如果左边界开始着火，火势将向右蔓延，右边界.同理。同样适用于顶部和底部；</li>
+</ul>
+</li>
+</ul>
+<h4 id="代码（MATLAB-1"><a href="#代码（MATLAB-1" class="headerlink" title="代码（MATLAB)"></a>代码（MATLAB)</h4><p>代码参考：<a href="https://blog.csdn.net/qq_43434831/article/details/100146269" target="_blank" rel="noopener">https://blog.csdn.net/qq_43434831/article/details/100146269</a></p>
+<h5 id="核心代码：-1"><a href="#核心代码：-1" class="headerlink" title="核心代码："></a>核心代码：</h5><p>1) </p>
+<p>计算每个cell的上下左右四个格子中1的数目</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">sum =(veg([n <span class="number">1</span>:n<span class="number">-1</span>],:)==<span class="number">1</span>) + (veg(:,[n <span class="number">1</span>:n<span class="number">-1</span>])==<span class="number">1</span>)+(veg(:,[<span class="number">2</span>:n <span class="number">1</span>])==<span class="number">1</span>) +  (veg([<span class="number">2</span>:n <span class="number">1</span>],:)==<span class="number">1</span>);</span></pre></td></tr></table></figure>
+<p>这样计算是考虑到了边界的连接，即火烧到棋盘右侧边界，便会从左侧边界继续烧过来，上下边界也同理。</p>
+<p>2）</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">veg = <span class="number">2</span>*(veg==<span class="number">2</span>)-((veg==<span class="number">2</span>)&amp;(sum&gt;<span class="number">0</span>|(<span class="built_in">rand</span>(n,n)&lt;Plight)))+<span class="number">2</span>*((veg==<span class="number">0</span>) &amp; <span class="built_in">rand</span>(n,n)&lt;Pgrowth);</span></pre></td></tr></table></figure>
+<p>首先用<code>rand(n,n)&lt;Plight</code>随机树木，同时还需要在确保此处cell为0，即<code>(veg==0) &amp; rand(n,n)&lt;Pgrowth</code>，最后乘以2<code>2*((veg==0) &amp; rand(n,n)&lt;Pgrowth)</code>实现了空地处Pgrowth概率长新树。</p>
+<p><img src="https://i.loli.net/2020/02/29/4fyo1I7VkHvFWKa.png" alt="随机生成树.png"></p>
+<p>((veg==2)&amp;(sum&gt;0|(rand(n,n)&lt;Plight)))就表示此处cell里面有树，而且此刻状态为燃烧。</p>
+<h5 id="完整代码：-1"><a href="#完整代码：-1" class="headerlink" title="完整代码："></a>完整代码：</h5><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">n = <span class="number">500</span>; </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Plight = <span class="number">5e-6</span>; <span class="comment">%产生雷击的概率</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">Pgrowth = <span class="number">1e-2</span>;<span class="comment">%空地长出树木的概率</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">veg=<span class="built_in">zeros</span>(n,n);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">imh = image(<span class="built_in">cat</span>(<span class="number">3</span>,veg,veg,veg));<span class="comment">%cat(3,veg,veg,veg)会生成n×n×3的矩阵，由image生成图像。</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> <span class="built_in">i</span>=<span class="number">1</span>:<span class="number">3000</span> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    sum =(veg([n <span class="number">1</span>:n<span class="number">-1</span>],:)==<span class="number">1</span>) + (veg(:,[n <span class="number">1</span>:n<span class="number">-1</span>])==<span class="number">1</span>)+(veg(:,[<span class="number">2</span>:n <span class="number">1</span>])==<span class="number">1</span>) +  (veg([<span class="number">2</span>:n <span class="number">1</span>],:)==<span class="number">1</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">     veg = <span class="number">2</span>*(veg==<span class="number">2</span>)-((veg==<span class="number">2</span>)&amp;(sum&gt;<span class="number">0</span>|(<span class="built_in">rand</span>(n,n)&lt;Plight)))+<span class="number">2</span>*((veg==<span class="number">0</span>) &amp; <span class="built_in">rand</span>(n,n)&lt;Pgrowth);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    set(imh, <span class="string">'cdata'</span>, <span class="built_in">cat</span>(<span class="number">3</span>,(veg==<span class="number">1</span>),(veg==<span class="number">2</span>),<span class="built_in">zeros</span>(n)) )<span class="comment">%这里cdata的意思是生成图像的同时，不替换原有图像。</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    drawnow</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">end</span></span></pre></td></tr></table></figure>
+<h5 id="运行结果：-1"><a href="#运行结果：-1" class="headerlink" title="运行结果："></a>运行结果：</h5><p><img src="https://i.loli.net/2020/02/29/aVQuHRbhwKnOs3D.gif" alt="火灾.gif"></p>
+<h3 id="二、NS模型"><a href="#二、NS模型" class="headerlink" title="二、NS模型"></a>二、NS模型</h3><p>NS模型是一个随机CA交通流模型，于1992年德国学者Nagel和Schrecknberg提出。以每辆车作为元胞，其状态都由它的速度和位置所表示</p>
+<p><img src="https://pic2.zhimg.com/50/v2-b2257119ede75ba235cbd938d0736004_hd.webp" alt=""></p>
+<p>其规则如下：</p>
+<ul>
+<li><p>加速过程。司机总是期望以最大速度行驶；</p>
+<script type="math/tex; mode=display">
+V_n→min(V_n+1,V_{max})</script></li>
+<li><p>安全刹车过程。为避免与前车相撞；</p>
+</li>
+</ul>
+<script type="math/tex; mode=display">
+V_n→min(V_n,d_n-1)</script><ul>
+<li><p>随机变慢过程。（以随机慢化概率ρ），由于不确定因素，如过度刹车、道路条件变化、心理因素、延迟加速等；</p>
+<script type="math/tex; mode=display">
+V_n→max(V_n-1,0)</script></li>
+<li><p>位置更新。车辆前进；</p>
+<script type="math/tex; mode=display">
+x_n→x_n+v_n</script></li>
+</ul>
+<h4 id="代码（python）"><a href="#代码（python）" class="headerlink" title="代码（python）"></a>代码（python）</h4><p>代码 <del>照搬</del> 参考：<a href="https://www.zhihu.com/question/21929655/answer/919048716" target="_blank" rel="noopener">https://www.zhihu.com/question/21929655/answer/919048716</a></p>
+<h5 id="核心代码：-2"><a href="#核心代码：-2" class="headerlink" title="核心代码："></a>核心代码：</h5><p>1)4个规则（原帖写得非常清楚这里就不再  <del>粘贴复制过来</del>  赘述了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加速</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">link[cell] = min(link[cell] + <span class="number">1</span>, max_speed)            </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 减速           </span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">link[cell] = min(link[cell], get_empty_front(link, numofcell, cell))            </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 随机慢化</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> random.random() &lt;= p_slowdown:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">	link[cell] = max(link[cell] - <span class="number">1</span>, <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 位置更新</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    nlink = [<span class="literal">None</span>] * numofcell</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> range(<span class="number">0</span>, numofcell):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> link[cell] != <span class="literal">None</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">            new_index = cell + link[cell]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> new_index &gt;= numofcell:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">                new_index -= numofcell</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">            nlink[new_index] = link[cell]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    link = nlink</span></pre></td></tr></table></figure>
+<h5 id="完整代码：-2"><a href="#完整代码：-2" class="headerlink" title="完整代码："></a>完整代码：</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建图像</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">fig = plt.figure(figsize=(<span class="number">10</span>,<span class="number">1</span>))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 模型参数设置</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">numofcell = <span class="number">20</span>     <span class="comment"># 道路长度</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">numofcar = <span class="number">12</span>      <span class="comment"># 空间中的车辆数</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">max_time = <span class="number">100</span>     <span class="comment"># 设置最大时间步</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">max_speed = <span class="number">5</span>      <span class="comment"># 允许的车辆最大速度</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">p_slowdown = <span class="number">0.3</span>   <span class="comment"># 随机慢化概率</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">pause_time = <span class="number">0.1</span>   <span class="comment"># 刷新时间（每一帧持续的时间）</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">cell_size = <span class="number">15</span>     <span class="comment"># 元胞的大小</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Plot_Space</span><span class="params">()</span>:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, numofcell): plt.plot([i<span class="number">-0.5</span>, i<span class="number">-0.5</span>], [<span class="number">-0.5</span>, <span class="number">0.5</span>], <span class="string">'-k'</span>, linewidth = <span class="number">0.5</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    plt.axis([<span class="number">-0.5</span>, numofcell<span class="number">-0.5</span>, <span class="number">-0.5</span>, <span class="number">0.5</span>])</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">plt.xticks([]);plt.yticks([])</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 函数：获取和前车的距离</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_empty_front</span><span class="params">(link, numofcell, indexofcell)</span>:</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">    link2 = link * <span class="number">2</span>   <span class="comment"># 周期性边界</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">    num = <span class="number">0</span>; i = <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">while</span> (link2[indexofcell + i]) == <span class="literal">None</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">        num += <span class="number">1</span>; i += <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">return</span> num</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># 随机生成初始元胞</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">Plot_Space()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">link = [<span class="literal">None</span>] * numofcell</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">num = <span class="number">0</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> num != numofcar:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">    sj = random.randint(<span class="number">0</span>, numofcell - <span class="number">1</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">if</span> link[sj] == <span class="literal">None</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">        link[sj] = random.randint(<span class="number">0</span>, <span class="number">5</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">        num += <span class="number">1</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line"><span class="comment"># NaSch模型</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">0</span>, max_time):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">40</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> range(<span class="number">0</span>, numofcell):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">41</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> link[cell] != <span class="literal">None</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">42</span></pre></td><td class="code"><pre><span class="line">            <span class="comment"># 加速</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">43</span></pre></td><td class="code"><pre><span class="line">            link[cell] = min(link[cell] + <span class="number">1</span>, max_speed)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">44</span></pre></td><td class="code"><pre><span class="line">            <span class="comment"># 减速</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">45</span></pre></td><td class="code"><pre><span class="line">            link[cell] = min(link[cell], get_empty_front(link, numofcell, cell))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">46</span></pre></td><td class="code"><pre><span class="line">            <span class="comment"># 随机慢化</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">47</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> random.random() &lt;= p_slowdown:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">48</span></pre></td><td class="code"><pre><span class="line">                link[cell] = max(link[cell] - <span class="number">1</span>, <span class="number">0</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">49</span></pre></td><td class="code"><pre><span class="line">    <span class="comment"># 位置更新</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">50</span></pre></td><td class="code"><pre><span class="line">    nlink = [<span class="literal">None</span>] * numofcell</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">51</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span> cell <span class="keyword">in</span> range(<span class="number">0</span>, numofcell):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">52</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> link[cell] != <span class="literal">None</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">53</span></pre></td><td class="code"><pre><span class="line">            new_index = cell + link[cell]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">54</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> new_index &gt;= numofcell:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">55</span></pre></td><td class="code"><pre><span class="line">                new_index -= numofcell</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">56</span></pre></td><td class="code"><pre><span class="line">            nlink[new_index] = link[cell]</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">57</span></pre></td><td class="code"><pre><span class="line">    link = nlink</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">58</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">59</span></pre></td><td class="code"><pre><span class="line">    x1 = []</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">60</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, len(link)):</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">61</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span> link[i] != <span class="literal">None</span>:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">62</span></pre></td><td class="code"><pre><span class="line">            x1.append(i)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">63</span></pre></td><td class="code"><pre><span class="line">    Plot_Space()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">64</span></pre></td><td class="code"><pre><span class="line">    plt.plot(x1, [<span class="number">0</span>] * numofcar, <span class="string">'sk'</span>, markersize=cell_size)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">65</span></pre></td><td class="code"><pre><span class="line">    plt.xlabel(<span class="string">'timestep:'</span> + str(t))</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">66</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">67</span></pre></td><td class="code"><pre><span class="line">    plt.pause(pause_time)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">68</span></pre></td><td class="code"><pre><span class="line">    plt.cla()</span></pre></td></tr></table></figure>
+<h5 id="运行结果：-2"><a href="#运行结果：-2" class="headerlink" title="运行结果："></a>运行结果：</h5><p><img src="https://i.loli.net/2020/02/29/W2YC7jZFXntU8RM.gif" alt="NS模型结果.gif"></p>
+<h2 id="CA的图灵完备性"><a href="#CA的图灵完备性" class="headerlink" title="CA的图灵完备性"></a>CA的图灵完备性</h2><p>图灵完全是指</p>
+<p>在可计算性理论里，如果一系列操作数据的规则（如指令集、编程语言、细胞自动机可以用来模拟单带图灵机，那么它是<strong>图灵完备的</strong>。</p>
+<p>如果某个东西展现出了图灵完备，它就有能力表现出可以模拟原始计算机，而即使最简单的计算机也能模拟出最复杂的计算机。</p>
+<p>虽然图灵机会受到存储能力的物理限制，图灵完全性通常指具有无限存储能力的通用物理机器或编程语言。简单来说，一切可计算的问题都能计算，这样的虚拟机或者编程语言就叫图灵完备的。</p>
+<p>引用作者 Melanie Mitchell在《Complexity: A Guided Tour》中的一段话：</p>
+<p><strong>“像生命游戏这么简单的元胞自动机在原则上能运行标准计算机运行的程序，这真是让人吃惊。不过，实际上，稍微复杂一点的计算就需要大量逻辑运算，并以各种方式相互作用，因此要设计出能实现复杂计算的初始设置基本不太可能。即使设计得出来，计算也会慢得让人无法忍受，更不要说用这种并行的非冯·诺依曼结构的元胞自动机来模拟传统冯·诺依曼结构计算机需要耗费的大量资源。因此没有人用生命游戏（或其他“通用”元胞自动机）来进行真实计算或是模拟自然系统。”</strong></p>
+<p>写些好玩的：</p>
+<p>去年Stephen Wolfram提出了关于一维自动机元胞规则30的三个问题，并且悬赏30000美元征求答案，网站如下：<a href="https://zhuanlan.zhihu.com/p/28522532" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/28522532</a></p>
+<p>关于这三个问题的前因后果，可以看下他本人的博客：</p>
+<p><a href="https://writings.stephenwolfram.com/2019/10/announcing-the-rule-30-prizes/" target="_blank" rel="noopener">https://writings.stephenwolfram.com/2019/10/announcing-the-rule-30-prizes/</a></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><strong>引文：</strong></p>
+<p><a href="https://www.zhihu.com/lives/761222997531951104" target="_blank" rel="noopener">元胞自动机于混沌边缘</a></p>
+<p><a href="https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;dbname=CJFD2007&amp;filename=GCKX200701004&amp;v=MjA2MzFvRnlIa1ViN0FJaTdBZHJHNEh0Yk1ybzlGWUlSOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVI3cWZaZWQ=" target="_blank" rel="noopener">元胞自动机:一种探索管理系统复杂性的有效工具</a></p>
+<p><a href="https://wenku.baidu.com/view/cebf4cf53169a4517623a3ba.html" target="_blank" rel="noopener">元胞自动机理论基础</a></p>
+<p><strong>基本概念：</strong></p>
+<p><a href="https://www.zhihu.com/question/21929655/answer/919048716" target="_blank" rel="noopener">元胞自动机及其运用</a></p>
+<p><a href="https://www.jianshu.com/p/c15bd74e5a76" target="_blank" rel="noopener">复杂性自动机模型</a></p>
+<p><strong>基本组成：</strong></p>
+<p><a href="https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;dbname=CJFD2007&amp;filename=GCKX200701004&amp;v=MjA2MzFvRnlIa1ViN0FJaTdBZHJHNEh0Yk1ybzlGWUlSOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVI3cWZaZWQ=" target="_blank" rel="noopener">元胞自动机:一种探索管理系统复杂性的有效工具</a></p>
+<p><strong>生命游戏：</strong></p>
+<p><a href="https://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;dbname=CJFD2007&amp;filename=GCKX200701004&amp;v=MjA2MzFvRnlIa1ViN0FJaTdBZHJHNEh0Yk1ybzlGWUlSOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVI3cWZaZWQ=" target="_blank" rel="noopener">元胞自动机:一种探索管理系统复杂性的有效工具</a></p>
+<p><a href="https://www.zhihu.com/lives/761222997531951104" target="_blank" rel="noopener">元胞自动机于混沌边缘</a></p>
+<p><a href="http://kns.cnki.net/KCMS/detail/detail.aspx?dbcode=CJFQ&amp;dbname=CJFD2002&amp;filename=JSJZ200204007&amp;v=MDEyNjNCZExHNEh0UE1xNDlGWTRSOGVYMUx1eFlTN0RoMVQzcVRyV00xRnJDVVI3cWZaZVJtRnlIZ1Y3dkFMejc=" target="_blank" rel="noopener">基于Matlab的元胞自动机的仿真设计</a></p>
+<p><strong>复杂性科学革命：</strong></p>
+<p><a href="https://zhuanlan.zhihu.com/p/28522532" target="_blank" rel="noopener">拉普拉斯之妖</a></p>
+<p>《Complexity: A Guided Tour》作者：Melanie Mitchell</p>
+<p>《A New Kind of Science》 作者：Stephen Wolfram</p>
+<p><a href="http://www.atlas-zone.com/complex/alife/ca/index.html" target="_blank" rel="noopener">复杂性科学-复杂性系统 人工生命</a></p>
+<p><strong>元胞自动机特征：</strong></p>
+<p><a href="http://www.atlas-zone.com/complex/alife/ca/index.html" target="_blank" rel="noopener">复杂性科学-复杂性系统 人工生命</a></p>
+<p><strong>CA图灵完备性</strong>：</p>
+<p><a href="https://baike.tw.wjbk.site/wiki/%E5%9C%96%E9%9D%88%E5%AE%8C%E5%82%99%E6%80%A7" target="_blank" rel="noopener">维基：图灵完备性</a></p>
+<p><strong>其他：</strong></p>
+<p>舆论传播模型：<a href="https://meltingasphalt.com/interactive/going-critical/?tdsourcetag=s_pctim_aiomsg" target="_blank" rel="noopener">https://meltingasphalt.com/interactive/going-critical/?tdsourcetag=s_pctim_aiomsg</a></p>
+<p>二维CA实现行人流动特性模拟：<a href="https://zhuanlan.zhihu.com/p/106796900" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/106796900</a></p>
+<p>病毒传播模型：<a href="https://mp.weixin.qq.com/s/ZOPncvPpFyLIwH_XChAdbg?client=tim&amp;ADUIN=276540610&amp;ADSESSION=1582962762&amp;ADTAG=CLIENT.QQ.5603_.0&amp;ADPUBNO=26933" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/ZOPncvPpFyLIwH_XChAdbg?client=tim&amp;ADUIN=276540610&amp;ADSESSION=1582962762&amp;ADTAG=CLIENT.QQ.5603_.0&amp;ADPUBNO=26933</a></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>Author：<a href="http://ntgeek.github.io">Geek</a>
+            <p>原文链接：<a href="http://ntgeek.github.io/posts/70401.html">http://ntgeek.github.io/posts/70401.html</a>
+            <p>发表日期：<a href="http://ntgeek.github.io/posts/70401.html">February 29th 2020, 7:37:10 pm</a>
+            <p>更新日期：<a href="http://ntgeek.github.io/posts/70401.html">February 29th 2020, 7:43:18 pm</a>
+            <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/posts/61124.html" title= "了解ASP.NET Core 7大对象">
+                    <div class="prevTitle">了解ASP.NET Core 7大对象</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC80Nzg3OS8yNDM3Ng==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:newthread-geek@outlook.com" target="_blank" rel="noopener" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/newthread-geek" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="/assets/example_qr.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引文"><span class="toc-number">1.</span> <span class="toc-text">引文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本概念"><span class="toc-number">2.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本组成"><span class="toc-number">3.</span> <span class="toc-text">基本组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#生命游戏"><span class="toc-number">4.</span> <span class="toc-text">生命游戏</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码（MATLAB"><span class="toc-number">5.</span> <span class="toc-text">代码（MATLAB)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#核心代码："><span class="toc-number">5.1.</span> <span class="toc-text">核心代码：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完整代码："><span class="toc-number">5.2.</span> <span class="toc-text">完整代码：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行结果："><span class="toc-number">5.3.</span> <span class="toc-text">运行结果：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复杂性科学革命"><span class="toc-number">6.</span> <span class="toc-text">复杂性科学革命</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#元胞自动机特征"><span class="toc-number">7.</span> <span class="toc-text">元胞自动机特征</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实例"><span class="toc-number">8.</span> <span class="toc-text">实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、模拟森林火灾"><span class="toc-number">8.1.</span> <span class="toc-text">一、模拟森林火灾</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码（MATLAB-1"><span class="toc-number">8.1.1.</span> <span class="toc-text">代码（MATLAB)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#核心代码：-1"><span class="toc-number">8.1.1.1.</span> <span class="toc-text">核心代码：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#完整代码：-1"><span class="toc-number">8.1.1.2.</span> <span class="toc-text">完整代码：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#运行结果：-1"><span class="toc-number">8.1.1.3.</span> <span class="toc-text">运行结果：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、NS模型"><span class="toc-number">8.2.</span> <span class="toc-text">二、NS模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码（python）"><span class="toc-number">8.2.1.</span> <span class="toc-text">代码（python）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#核心代码：-2"><span class="toc-number">8.2.1.1.</span> <span class="toc-text">核心代码：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#完整代码：-2"><span class="toc-number">8.2.1.2.</span> <span class="toc-text">完整代码：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#运行结果：-2"><span class="toc-number">8.2.1.3.</span> <span class="toc-text">运行结果：</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CA的图灵完备性"><span class="toc-number">9.</span> <span class="toc-text">CA的图灵完备性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文献"><span class="toc-number">10.</span> <span class="toc-text">参考文献</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 7
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/29</span><a class="archive-post-title" href= "/posts/70401.html" >元胞自动机及其应用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/22</span><a class="archive-post-title" href= "/posts/61124.html" >了解ASP.NET Core 7大对象</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/11</span><a class="archive-post-title" href= "/posts/50221.html" >凸包问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/08</span><a class="archive-post-title" href= "/posts/40909.html" >HTTP的今生前世</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/posts/30919.html" >当数字计算机超越模拟计算机</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/20</span><a class="archive-post-title" href= "/posts/20719.html" >几个简单有趣的算法或实例</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/01</span><a class="archive-post-title" href= "/posts/10401.html" >遗传算法</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="服务器"><span class="iconfont-archer">&#xe606;</span>服务器</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="计算机科普"><span class="iconfont-archer">&#xe606;</span>计算机科普</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Geek"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
