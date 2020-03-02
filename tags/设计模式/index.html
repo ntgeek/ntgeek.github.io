@@ -346,140 +346,26 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/posts/70401.html" >
+        <a class="abstract-title" href = "/posts/7738.html" >
             
-                <span>元胞自动机及其应用</span>
-        </a>
-        <div class="abstract-content">
-            作者：卢姿奕
-引文元胞自动机有着重要的理论价值和实际运用价值这一说法或许来自于它本身以计算机建模和仿真的方法研究由类似于生物细胞的大量并行单元个体组成的复杂系统的宏观行为与规律 这一特性。
-简单来说，假设现在要对一个真实世界进行建模，首先最容易想到的方法就是把真实世界打上很多离散的格子，每个格子上可能处在不同的状态，而这些状态会遵循一定规律发生演化，以此来完成一个行为的建模。广义上就是将一个问题抽象成离散的格点的改变，这种状态的改变是受附近格点的状态（或者自己的状态和周围格点的历史状态）所影响，这之间存在着一些耦合。而重点在于它是存在着非线性的，真正意义上的元胞自动机是由混沌所主导。
-在...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/02/29</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" target="_blank" rel="noopener" data-tags = "算法">算法</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/posts/50221.html" >
-            
-                <span>凸包问题</span>
-        </a>
-        <div class="abstract-content">
-            作者： 黄尚科
-基本概念
-考虑一个直观的例子，假设地面上有一些木桩，用一条足够长的绳子将所有的木桩围起来，绳子所围成的图形为一个凸多边形。凸包问题就是要求出上述凸多边形的形状。
-其抽象定义为，给定二维平面的若干个点，求一个面积最小的凸多边形，使得所有点均在多边形的内部或在多边形的边上。
-
-几何原理
-通过叉积判断向量和点的位置关系
-
-O(0,0)    A(0,1)    B(1,1)    C(-1,1)
-以向量OA为参照，
-OAxOB0    向量OA与向量OC叉积为正，点C在向量OA的左边
-
-极角排序
-
-通过计算两点与原点所形成向量的叉积从而进行极角排序
-算法Graham 算法
-基本...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/02/11</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" target="_blank" rel="noopener" data-tags = "算法">算法</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/posts/20719.html" >
-            
-                <span>几个简单有趣的算法或实例</span>
+                <span>观察者模式</span>
         </a>
         <div class="abstract-content">
             作者： 吕栋梁
-前几天的知乎热度榜上这样一个问题冲上来热搜前三世界上有哪些代码量很少，但很牛逼很经典的算法或项目案例？
-在这里挑选部分网友的回答做一个归纳总结。
-首先就是传说中的nocodenocode
-GitHub收割35.4k star  什么叫跨平台？什么叫0成本接入？都一边去。道法自然，无码是为有码，码象万千。
-（有意思有意思，值得深研~
-洗牌算法这个算法我记得我们组例会提到过两次了。Fisher–Yates也被称之为Knuth随机置乱算法。从命名上来说是这样一个场景：我们将一副54张的扑克牌洗牌，洗牌之后要保证所有扑克牌出现在任意存在位置上的概率是等可能的，也就是说54！种排列...
+定义、动机及结构定义GoF书中对观察者模式的意图定义是：定义对象间的一种一对多的依赖关系，当一个对象的状态发生改变时，所有依赖于它的对象都得到通知，并被更新。
+观察者模式也称发布—订阅（publish-subscribe)模式。即目标是通知的发布者。它发出通知时并不需要知道谁是它的观察者。可以有任意数目的观察者订阅并接收通知。我看到有些文章会在这里抠字眼，把这两种模式区分开来，主要依据是耦合程度。即观察者模式是松耦合面向接口编程，而发布者-订阅者是完全解耦的。乍一看还有点道理，但一寻思这不是强行给自己加戏嘛。
+动机我们为了提升一个系统代码的可维护性和可复用性，采取了面向对...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/01/20</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/02</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" target="_blank" rel="noopener" data-tags = "算法">算法</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/posts/10401.html" >
-            
-                <span>遗传算法</span>
-        </a>
-        <div class="abstract-content">
-            作者：卢姿奕
-概述
-
-遗传算法（英语：genetic algorithm (GA) ）是计算数学中用于解决最优化的搜索算法，是进化算法的一种。进化算法最初是借鉴了进化生物学中的一些现象而发展起来的，这些现象包括遗传、突变、自然选择以及杂交等。
-
-遗传算法通常实现方式为一种计算机模拟。对于一个最优化问题，一定数量的候选解（称为个体）可抽象表示为染色体，使种群向更好的解进化。传统上，解用二进制表示（即0和1的串），但也可以用其他表示方法。进化从完全随机个体的种群开始，之后一代一代发生。在每一代中评价整个种群的适应度，从当前种群中随机地选择多个个体（基于它们的适应度），通过自然选择和突变产生新...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/12/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" target="_blank" rel="noopener" data-tags = "算法">算法</a>
+        <a class="post-tag" href="javascript:void(0);" target="_blank" rel="noopener" data-tags = "设计模式">设计模式</a>
     
 </div>
             
