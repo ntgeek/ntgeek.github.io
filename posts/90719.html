@@ -22,7 +22,7 @@
     <meta name="description" content="中南民族大学新思路团队Geek组博客">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>HTTP的今生前世 · Geek组博客</title>
+    <title>前端同构渲染 · Geek组博客</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/" >Newthread-Geek&#39;s Studio.</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">HTTP的今生前世</a>
+                <a href="#" class="post-name">前端同构渲染</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            HTTP的今生前世
+            前端同构渲染
             <!-- 404 -->
             
         </h1>
@@ -266,18 +266,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" target="_blank" rel="noopener" data-tags = "服务器">服务器</a>
+        <a class="post-tag" href="javascript:void(0);" target="_blank" rel="noopener" data-tags = "前端">前端</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count word-count">2.2k</span>Reading time: <span class="post-count reading-time">8 min</span></span>
+                        <span>Word count: <span class="post-count word-count">3.1k</span>Reading time: <span class="post-count reading-time">11 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2020/02/08</span>
+                    <span class="post-intro-time">2020/04/10</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -401,89 +401,148 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>作者：梁文韬</p>
-<h2 id="HTTP的今生前世"><a href="#HTTP的今生前世" class="headerlink" title="HTTP的今生前世"></a>HTTP的今生前世</h2><p>​    http协议在我们的生活中随处可见，只要你上网，不论是浏览网页，听歌，看视频，还是玩游戏，背后总会需要http的支持。</p>
-<h4 id="史前"><a href="#史前" class="headerlink" title="史前"></a>史前</h4><p>​    20世纪60年代，美国国防部高等研究计划署（ARPA）建立了ARPA网，是早期的分组交换网络，也是实现协议套件TCP/IP的第一个网络。（这两项技术成为互联网的技术基础）</p>
-<h4 id="诞生1"><a href="#诞生1" class="headerlink" title="诞生1"></a>诞生<sup><a href="#fn_1" id="reffn_1">1</a></sup></h4><p>​    1989年3月，互联网还只属于少数人。在这互联网的黎明时期，HTTP诞生了。</p>
-<p>​    CERN（欧洲核子研究组织）的蒂姆·伯纳斯 - 李（Tim Berners-Lee）发表了一篇论文，提出了在互联网上构建超链接文档系统的构想，一种能让远隔两地的研究者们共享知识的构想——借助多文档之间互相关联形成的超文本（HyperText）连成可互相参阅的WWW。</p>
-<p>​    现在已经提出了3项WWW构建技术：</p>
-<ul>
-<li>把SGML（Standard Generalized Markup Language，标准通用标记语言）作为页面的文本标记语言的HTML；</li>
-<li>作为文档传递协议的HTTP；</li>
-<li>指定文档所在地址的URL。</li>
-</ul>
-<h4 id="HTTP-0-9-1-0"><a href="#HTTP-0-9-1-0" class="headerlink" title="HTTP 0.9/1.0"></a>HTTP 0.9/1.0</h4><p>​    0.9和1.0这两个版本，就是最传统的request – response的模式了，HTTP 0.9的协议简单到极点，请求时，不支持请求头，只支持<code>GET</code>方法。HTTP 1.0拓展了0.9，其中主要增加了几个变化：</p>
-<ul>
-<li>在请求中加入了HTTP版本号，如：<code>GET XXX.html HTTP/1.0</code>；</li>
-<li>除了<code>GET</code>方法，还引入了<code>POST</code>和<code>HEAD</code>方法</li>
-<li>开始使用header了；</li>
-<li>增加了HTTP Status Code标识相关的状态码；</li>
-<li><code>Content-Type</code>可以传输其他的文件了。</li>
-</ul>
-<p>可以看出，HTTP 1.0 开始让这个协议变得很文明了，一种工程文明。因为：<sup><a href="#fn_2" id="reffn_2">2</a></sup></p>
-<ul>
-<li>一个协议有没有版本管理，是一个工程化的象征。</li>
-<li>header是协议可以说是把元数据和业务数据解耦，也可以说是控制逻辑和业务逻辑的分离。</li>
-<li>Status Code 的出现可以让请求双方以及第三方的监控或管理程序有了统一的认识。最关键是还是控制错误和业务错误的分离.</li>
-</ul>
-<p>​    但是，HTTP1.0性能上有一个很大的问题，那就是每请求一个资源都要新建一个TCP链接，而且是串行请求，所以，就算网络变快了，打开网页的速度也还是很慢。所以，HTTP 1.0 应该是一个必需要淘汰的协议了。</p>
-<h4 id="HTTP-1-13"><a href="#HTTP-1-13" class="headerlink" title="HTTP/1.13"></a>HTTP/1.1<sup><a href="#fn_3" id="reffn_3">3</a></sup></h4><p>​    1997年1月正式公布的HTTP/1.1，得到了较大广泛的使用，延续了十余年。其相较于前版本改进主要有一下几个方面：</p>
-<ul>
-<li>可以设置 <code>keepalive</code> 来让HTTP重用TCP链接，重用TCP链接可以省了每次请求都要在广域网上进行的TCP的三次握手的巨大开销。这是所谓的“<strong>HTTP 长链接</strong>” 或是 “<strong>请求响应式的HTTP 持久链接</strong>”。英文叫 HTTP Persistent connection.</li>
-<li>支持 Chunked Responses ，也就是说，在Response的时候，不必说明 <code>Content-Length</code> 这样，客户端就不能断连接，直到收到服务端的EOF标识。这种技术又叫 “<strong>服务端Push模型</strong>”，或是 “<strong>服务端Push式的HTTP 持久链接</strong>”</li>
-<li>还增加了 cache control 机制。</li>
-<li>还正式加入了一个很重要的头—— <code>HOST</code>这样的话，服务器就知道你要请求哪个网站了。因为可以有多个域名解析到同一个IP上，要区分用户是请求的哪个域名，就需要在HTTP的协议中加入域名的信息，而不是被DNS转换过的IP信息。</li>
-<li>正式加入了 <code>OPTIONS</code> 方法，其主要用于 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank" rel="noopener">CORS – Cross Origin Resource Sharing</a> 应用。</li>
-</ul>
-<p>​    可以看出，虽然HTTP1.1看似是1.0 的修正，但实际上安全性、实用性得到了较大的完善，故其能够创下 十余年被广泛使用的传奇。</p>
-<h4 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h4><p>​    虽然 HTTP/1.1 已经十分完善，但是还是有性能问题，虽然HTTP/1.1 可以重用TCP链接，但是请求还是一个一个串行发的，需要保证其顺序。然而，大量的网页请求中都是些资源类的东西，这些东西占了整个HTTP请求中最多的传输数据量。所以，理论上来说，如果能够并行这些请求，那就会增加更大的网络吞吐和性能。</p>
-<p>​    另外，HTTP/1.1传输数据时，是以文本的方式，借助耗CPU的zip压缩的方式减少网络带宽，但是耗了前端和后端的CPU。这也是为什么很多RPC协议诟病HTTP的一个原因，就是数据传输的成本比较大。</p>
-<p>​    此版本与HTTP/1.1区别主要是：<sup><a href="#fn_4" id="reffn_4">4</a></sup></p>
-<ul>
-<li><strong>帧、消息、流和TCP连接</strong>。有别于HTTP/1.1，HTTP/2将一个TCP连接分成若干个流（stream），每个流中可以传输若干消息（Message），每个消息由若干个最小二进制帧（Frame）组成。<strong>这也是HTTP/1.1与HTTP/2.0最大区别所在。</strong>HTTP/2中，每个用户的操作行为被分配了一个流编号(stream ID)，这意味着用户与服务端之间创建了一个TCP通道；协议将每个请求分割为二进制的控制帧与数据帧部分，以便解析。这个举措在SPDY中的实践表明，相比HTTP/1.1，新页面加载可以加快11.81% 到 47.7%</li>
-<li><strong>HPACK算法</strong>。是HTTP/2.0新引入的一个算法，用于对HTTP头部做压缩。如果你同时发出多个请求，他们的头是一样的或是相似的，那么，协议会帮你消除重复的部分。</li>
-<li><strong>服务器推送</strong>。 网站为了使请求数减少，通常采用对页面上的图片、脚本进行极简化处理。但是，这一举措十分不方便，也不高效，依然需要诸多HTTP链接来加载页面和页面资源。HTTP/2引入了服务器推送，即服务端向客户端发送比客户端请求更多的数据。这允许服务器直接提供浏览器渲染页面所需资源，而无须浏览器在收到、解析页面后再提起一轮请求，节约了加载时间。 </li>
-</ul>
-<p>​    HTTP/2 是2015年推出的，其发布后，Google 宣布移除对SPDY的支持，拥抱标准的 HTTP/2。过了一年后，就有8.7%的网站开启了HTTP/2，根据 <a href="https://w3techs.com/technologies/details/ce-http2/all/all" target="_blank" rel="noopener">报告</a> ，截止至2019年10月， 在全世界范围内已经有41%的网站开启了HTTP/2。</p>
-<h4 id="HTTP-3"><a href="#HTTP-3" class="headerlink" title="HTTP/3"></a>HTTP/3</h4><p>​    在HTTP/3中，将弃用TCP协议，改为使用基于UDP协议的QUIC协议实现。QUIC（快速UDP网络连接）是一种实验性的传输层网络传输协议，由Google开发，该协议旨在取代TCP协议，使网页传输更快。</p>
-<p>​    </p>
-<p>​    这牵涉到一个叫<a href="https://en.wikipedia.org/wiki/Head-of-line_blocking" target="_blank" rel="noopener">Head-of-Line Blocking</a>的问题，这也是一个比较经典的流量调度的问题。这是由于tcp的特性引发的问题。这个问题最早主要的发生的交换机上。下图来自Wikipedia。</p>
-<p><img src="https://coolshell.cn/wp-content/uploads/2019/10/HOL_blocking.png" alt="img"></p>
-<p>图中，左边的是输入队列，其中的1，2，3，4表示四个队列，四个队列中的1，2，3，4要去的右边的output的端口号。此时，第一个队列和第三个队列都要写右边的第四个端口，然后，一个时刻只能处理一个包，所以，一个队列只能在那等另一个队列写完后。然后，其此时的3号或1号端口是空闲的，而队列中的要去1和3号端号的数据，被第四号端口给block住了。这就是所谓的HOL blocking问题。<sup><a href="#fn_5" id="reffn_5">5</a></sup></p>
-<p>HTTP/1.1中的<a href="https://baike.baidu.com/item/HTTP%E7%AE%A1%E7%BA%BF%E5%8C%96/23217393?fr=aladdin" target="_blank" rel="noopener">pipeline</a>中如果有一个请求block了，那么队列后请求也统统被block住了；HTTP/2 多请求复用一个TCP连接，一旦发生丢包，就会block住所有的HTTP请求。这样的问题很讨厌。好像基本无解了。</p>
-<p>是的TCP是无解了，但是UDP是有解的 ！<strong>于是HTTP/3破天荒地把HTTP底层的TCP协议改成了UDP。</strong></p>
-<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ol>
-<li>http协议始于三十年前蒂姆·伯纳斯 - 李的一篇论文；</li>
-<li>http/0.9是个简单的文本传输协议，只能获取文本资源；</li>
-<li>http/1.1是目前使用最广泛的协议，功能也十分完善；</li>
-<li>http/2 基于 Google的SPDY协议，注重性能；</li>
-<li>http/3 基于Google的QUIC协议，解决了HOL blocking问题。</li>
-</ol>
-<p>引用：</p>
-<blockquote id="fn_1">
-<sup>1</sup>. 摘自《图解http》——上野 宣[日]<a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+        <p>作者：吕栋梁</p>
+<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><blockquote>
+<p>如题，这篇文章的主题是前端同构渲染，在学习这个概念的过程中，我看到了不少争议。主要为两点，一点是对同构渲染与SSR的集合关系的争议，另一点是对“同构渲染”这个词本身的争议，即该词在语言上的解释与其实际代表的知识是否对应的争议。不过，在这边文章中，我并不会谈这些，但相信你读完之后，会有自己的思考。下面的内容都是基于我对前端同构这种渲染方式的理解，并不一定正确，如有不当之处，欢迎指出。</p>
 </blockquote>
-<blockquote id="fn_2">
-<sup>2</sup>. 摘自<a href="https://coolshell.cn/articles/19840.html" target="_blank" rel="noopener">https://coolshell.cn/articles/19840.html</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
-</blockquote>
-<blockquote id="fn_3">
-<sup>3</sup>. 摘自<a href="https://coolshell.cn/articles/19840.html" target="_blank" rel="noopener">https://coolshell.cn/articles/19840.html</a><a href="#reffn_3" title="Jump back to footnote [3] in the text."> &#8617;</a>
-</blockquote>
-<blockquote id="fn_4">
-<sup>4</sup>. 摘自Wiki百科<a href="https://zh.m.wikipedia.org/wiki/HTTP/2" target="_blank" rel="noopener">https://zh.m.wikipedia.org/wiki/HTTP/2</a><a href="#reffn_4" title="Jump back to footnote [4] in the text."> &#8617;</a>
-</blockquote>
-<blockquote id="fn_5">
-<sup>5</sup>. 摘自<a href="https://coolshell.cn/articles/19840.html" target="_blank" rel="noopener">https://coolshell.cn/articles/19840.html</a><a href="#reffn_5" title="Jump back to footnote [5] in the text."> &#8617;</a>
-</blockquote>
+<h2 id="从AJAX到SPA"><a href="#从AJAX到SPA" class="headerlink" title="从AJAX到SPA"></a>从AJAX到SPA</h2><p>在谈同构渲染之前，我们必须把时间拨回些年份。</p>
+<p>Ajax出现之前，传统的web在今天看来是非常蠢的。当用户点击页面链接，或者提交表单时，都会重新请求服务器，获得一份文档流来刷新页面，即使只是更新了极少的数据。XMLHttpRequest的出现，打破了这一局面，web从此迎来Ajax时代。</p>
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src=" http://img.nt-geek.club/ajax%E5%B7%A5%E4%BD%9C%E6%B5%81-ldl.png ">
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">Ajax工作流</div>
+</center>
+
+<p>然而Ajax的出现使得web页面越来越复杂，动态性越来越强，在这种情况下，视图和数据杂糅在一起会使得应用的跟踪维护变得异常困难。</p>
+<p>在2010年，Twitter对其网站进行了一次重构，并发布了全新的版本。这次重构，将UI渲染和业务逻辑更多的放在了client/browser，也就是说，在网页的生命周期中，browser的分量重了不少。这种架构无疑是开创性的。</p>
+<p> 这种重客户端的架构被称作SPA（single page web application，单页面Web应用），它迅速的流行起来。</p>
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src=" http://img.nt-geek.club/spa%E5%B7%A5%E4%BD%9C%E6%B5%81.png ">
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">SPA工作流</div>
+</center>
+
+<p>大型单页应用最显著特点之一就是采用前端路由跳转到子页面，及通过改变页面的URL，在不重新请求页面的情况下，更新页面视图。并且一般不会重新渲染整个页面，而是更新更新页面的一部分，加载速度快，页面反应灵活，这可能是SPA最大的优势，目前在Browser环境中实现这一功能的方式主要有两种：</p>
+<ul>
+<li><p>利用url的hash(#) </p>
+<p>hash(#position)实际上是定位锚点，不同的position片段标识符对应网页视图中的不同位置。以此来达到切换URL更新视图而不跳转的功能。如“关于我们”的页面 URI 可能是 <a href="http://domain.com/about，" target="_blank" rel="noopener">http://domain.com/about，</a> 但在 SPA 中则可能是 <a href="http://domain.com/#about。实际上这种前端路由是使用了window.onhashchange事件，根据标识符的不同在前端渲染不同的组件来实现，网易云音乐官网采用的就是这种方式。" target="_blank" rel="noopener">http://domain.com/#about。实际上这种前端路由是使用了window.onhashchange事件，根据标识符的不同在前端渲染不同的组件来实现，网易云音乐官网采用的就是这种方式。</a></p>
+</li>
+<li><p>利用H5的history interface</p>
+<p><strong><code>History</code></strong> 接口允许操作浏览器的曾经在标签页或者框架里访问的会话历史记录。 主要使用的还是其中的<strong>pushState</strong>方法，可以“干掉那个怎么看怎么不舒服的“#”。具体的使用方式可参考MDN说明。</p>
+</li>
+</ul>
+<h2 id="为何需要同构"><a href="#为何需要同构" class="headerlink" title="为何需要同构"></a>为何需要同构</h2><p>似乎一切看起来都很美好。然而SPA最大的优点也促成了它最大的两个缺点：  <strong>首屏加载慢、不利于SEO</strong>。</p>
+<p>如何理解呢？</p>
+<p>SPA模式下，首次加载时，我们首先会得到一个根HTML文件，接着花高昂的代价去下载一个JS文件，之后又会经过数据请求，生成DOM树，CSSDOM树这些渲染过程。也就是说我们的数据请求和渲染都放在了客户端，并且直到最后才将页面实际内容添加到根HTML文件的根节点上。如此就造成了FCP、FMP时间过长的现象。</p>
+<p>至于<strong>不利于SEO</strong>则有以下几点原因：</p>
+<ul>
+<li>SPA实际上返回的只是一个HTML骨架，页面的实际内容是靠JS在客户端动态生成的，不会包含在页面源代码当中。如下图所示的页面当你右键查看源代码就会发现body下只有一个根div和script标签。没有实际存在的<strong>\<a>标签</strong>和其他内容，自然不利于搜索引擎向下爬取。</li>
+<li>SEO中非常重要的TDK，也就是Html页面的Title标签，以及通过\<meta>标签添加的 description （描述）和 keywords 在SPA中往往都是固定的甚至于根本没有。</li>
+<li>初始加载渲染速度慢，可能导致排名靠后。</li>
+</ul>
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="http://img.nt-geek.club/%E5%90%8C%E6%9E%841-ldl.png">
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">vue-router-1</div>
+</center>
+
+
+
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="http://img.nt-geek.club/%E5%90%8C%E6%9E%842-ldl.png ">
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">vue-router-2</div>
+</center>
+
+
+
+<p>实际上，SPA架构属于一种被称作<strong>CSR（Client-Side Rendering）</strong>的渲染方式。与之相对的被称作<strong>SSR（Server-Side Rendering）</strong>。区分它们从字面上来理解就好了。CSR就是把渲染过程放在客户端，它强在页面的交互响应，而SSR则是服务端渲染好的HTML直出到客户端，强在首屏渲染。</p>
+<p>这时候，人们就很自然的想到，为什么我们不能前后端都使用JS呢？我们为什么不能在CSR和SSR中间找到一个平衡点或者兼具这两种形态呢，于是，同构渲染应运而生。</p>
+<p>同构渲染是将CSR（SPA）和SSR的优势结合到了一起。关于CSR（SPA）、传统SSR、同构的对比，可以参考下面这张图。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">CSR（SPA）</th>
+<th style="text-align:center">传统SSR</th>
+<th style="text-align:center">同构</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">优点</td>
+<td style="text-align:center">首屏性能高、FP时间最快</td>
+<td style="text-align:center">SEO 友好、首屏性能高</td>
+<td style="text-align:center">SEO 友好；首屏性能高；客户端用户体验友好；客户端和服务端公用代码，开发效率高。</td>
+</tr>
+<tr>
+<td style="text-align:center">缺点</td>
+<td style="text-align:center">SEO 不友好；FCP、FMP慢</td>
+<td style="text-align:center">客户端数据共享成本高；整体页面渲染缓慢；不擅长网站交互；频繁的服务器请求。首字节TTFB长</td>
+<td style="text-align:center">Node 容易形成性能瓶颈</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="前端同构渲染"><a href="#前端同构渲染" class="headerlink" title="前端同构渲染"></a>前端同构渲染</h2><p>在抽象代数中， 同构（ isomorphism ）是在数学对象之间定义的一类映射，它能揭示出这些对象的属性或者操作之间存在的关系。若两个数学结构之间存在同构映射，那么这两个结构就是<strong>同构的</strong>。</p>
+<p>拿图的同构来说吧，五边形和五角星就是一个非常经典的同构例子。它们的形态不同，但是拓扑结构（连通性）是一样的，即每个节点的出度入度是相同的。</p>
+<p><img src="http://img.nt-geek.club/五边形和五角星-ldl.png" alt=""></p>
+<p>如引言所说，我们今天实际要说的内容该不该叫同构（isomorphism Javascript）实际上是有争议的，有些人认为应该叫Universal javascript，而当谈到某种框架下实现同构时，人们又往往直接称其为SSR，在这里要注意下不同的叫法。</p>
+<p>我个人的理解是这样，所谓前端同构渲染就是采用一套代码，构建双端（server 和 client）逻辑，最大限度的重用代码，不用维护两套代码，而要想让JavaScript代码同时在客户端和服务端环境中运行，这些环境就必须是同构的。这也就是说，应该存在一种映射，能够将客户端的功能映射到服务器端的环境中，反之亦然。这点传统的服务端渲染（SSR）是无法做到的。</p>
+<p>好了，如果之前没有接触过同构，我想你现在肯定很懵逼。<strong>同构到底是怎么实现的？</strong></p>
+<p>首先，我们要明确的是：<strong>同构是有层次有选择的。</strong></p>
+<p>Node.js和大多数浏览器一样也是采用的V8内核，这使得很多时候浏览器上能运行的JS代码也可以在node.js上正常工作。但是，node和浏览器的具体实现毕竟还有很大不同，在客户端，我们拥有全局对象（如 window）以及各种API，其中包括localStorage、History API 以及WebGL。而在服务器端，我们在一个请求 / 响应生命周期的上下文环境中工作，而且服务器端还拥有自身的全局对象。我们很难实现完全的同构。我们要做的是尽可能的把那些可以同构并且需要重构的部分抽离出来，使其成为客户端和服务端共用的部分，比如一些可以共享的视图模板、逻辑、路由组件等等，同时，为了避免环境的冲突，我们必须做好代码的隔离工作。</p>
+<p>以同构渲染的方式实现SPA的例子来说吧，用户首次请求页面时，服务端会先解析JS文件，预先渲染生成好所需的HTML文件，直出到客户端。 客户端拿到代码后运行 JS ，进行客户端激活（Client-Side Hydration，CSH），也就是将路由的控制权再转交给客户端，如此，它还是那个它（SPA） 。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">express.get(<span class="string">'*'</span>, (req, res) =&gt; &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    <span class="keyword">const</span> context = &#123; <span class="attr">url</span>: req.url &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    <span class="comment">/* 创建vue实例，传入请求路由信息</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"><span class="comment">            新加一个script标签，创建一个全局对象，值是state的值，将服务器端请求得出的结果传给客户端</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"><span class="comment">            head里面添加脚本，用于引入单页面应用,&lt;script src="$&#123;clientBundleFileUrl&#125;"&gt;&lt;/script&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line"><span class="comment">    */</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    createApp(context).then(<span class="function"><span class="params">app</span> =&gt;</span> &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">let</span> state = <span class="built_in">JSON</span>.stringify(context.state)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        renderer.renderToString(app, (err, html) =&gt; &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">if</span> (err) &#123; <span class="keyword">return</span> res.state(<span class="number">500</span>).end(<span class="string">'运行时错误'</span>) &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">            res.send(<span class="string">`</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"><span class="string">                &lt;!DOCTYPE html&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line"><span class="string">                &lt;html lang="en"&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line"><span class="string">                    &lt;head&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"><span class="string">                        &lt;meta charset="UTF-8"&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line"><span class="string">                        &lt;title&gt;Vue-SSR渲染页面&lt;/title&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line"><span class="string">                        &lt;script&gt;window.__INITIAL_STATE__ = <span class="subst">$&#123;state&#125;</span>&lt;/script&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line"><span class="string">                        &lt;script src="<span class="subst">$&#123;clientBundleFileUrl&#125;</span>"&gt;&lt;/script&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line"><span class="string">                    &lt;/head&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line"><span class="string">                    &lt;body&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"><span class="string">                        &lt;div id="app"&gt;<span class="subst">$&#123;html&#125;</span>&lt;/div&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line"><span class="string">                    &lt;/body&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line"><span class="string">                &lt;/html&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line"><span class="string">            `</span>)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">        &#125;)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">    &#125;, err =&gt; &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">if</span>(err.code === <span class="number">404</span>) &#123; res.status(<span class="number">404</span>).end(<span class="string">'所请求的页面不存在'</span>) &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">    &#125;)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">&#125;)</span></pre></td></tr></table></figure>
+<p>借助vue、react这些前端框架实现同构版本的SPA的基础，是因为它们内部的虚拟DOM机制，我们通过在服务端node.js环境下执行将虚拟DOM转换成HTML字符串发送到前端直接渲染。如果我们使用的框架直接使用DOM Api，它就没法在node环境下运行了。</p>
+<h2 id="我们需要同构吗"><a href="#我们需要同构吗" class="headerlink" title="我们需要同构吗"></a>我们需要同构吗</h2><p>我们今天谈同构，说了不少同构的好处，但是在实际开发中真的就是这么回事吗？说一些同构渲染的缺陷吧。</p>
+<ul>
+<li>开发环境受限，比如一些框架的一些生命周期函数不能使用。</li>
+<li>客户端激活也是需要时间的，因此这种方案有时是具有欺骗性的加载完成和可交互性，在真的执行客户端JS并绑定事件处理之前，页面实际上无法响应输入，这会让用户不明所以。</li>
+<li>初始渲染过程放到了服务端，导致了更多的服务器负载。</li>
+<li>发布的不利性，由于 Server 的代码依赖了构建出来的同构模块，在日常开发中，前端做一些页面修改是经常发生的事，比如修改一些事件监听，而这时候因为 Js, CSS 资源的变化，导致 template.html 变化，故而导致 server 包需要发布，如果业务有有多节点，都要一一无损重启。肯定是有办法做到发布代码而不用重启 Node 服务的。</li>
+<li>node.js本身的诸多缺陷尚需解决，不够稳定。</li>
+</ul>
+<p>实际上，脱离实际场景谈哪种渲染方式更好是非常奇怪的，在选择架构的时候，必须要考虑好业务需求，是重交互还是重内容，实际的开发条件有利于实现哪种。总之，不能盲目追新，当然了，同构渲染这个概念也并不新颖。</p>
+<p>我以为前后端分离仍然是大趋势，一方面搜索引擎对SPA的爬虫优化处在不断进步当中，未来更低的延迟，更高的带宽会让首屏加载较慢的影响越来越小，另一方面，终端设备类型及其所处的环境越来越复杂使得，前后端的分离，代码复用变得越来越重要。</p>
+<p>以上。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li>《同构JavaScript应用开发》 Jason Strimpel &amp;Maxime Najim著 张俊达 译</li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/History" target="_blank" rel="noopener">History Interface</a>  by MDN web docs</li>
+<li><a href="https://tech.meituan.com/2018/11/15/first-contentful-paint-practice.html" target="_blank" rel="noopener">构建时预渲染：网页首帧优化实践</a>  by 美团技术博客</li>
+<li><a href="https://ssr.vuejs.org/zh/" target="_blank" rel="noopener">Vue SSR 指南</a>   by  vuejs.org</li>
+<li><a href="https://juejin.im/post/5c821dc45188257e1f2915b1" target="_blank" rel="noopener">前端同构渲染的思考与实践</a>  by  蚂蚁保险体验技术</li>
+</ul>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>Author：<a href="http://ntgeek.github.io">Geek</a>
-            <p>原文链接：<a href="http://ntgeek.github.io/posts/40909.html">http://ntgeek.github.io/posts/40909.html</a>
-            <p>发表日期：<a href="http://ntgeek.github.io/posts/40909.html">February 8th 2020, 9:57:28 am</a>
-            <p>更新日期：<a href="http://ntgeek.github.io/posts/40909.html">February 22nd 2020, 10:25:56 am</a>
+            <p>原文链接：<a href="http://ntgeek.github.io/posts/90719.html">http://ntgeek.github.io/posts/90719.html</a>
+            <p>发表日期：<a href="http://ntgeek.github.io/posts/90719.html">April 10th 2020, 6:34:07 pm</a>
+            <p>更新日期：<a href="http://ntgeek.github.io/posts/90719.html">April 10th 2020, 6:36:58 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -491,17 +550,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/posts/50221.html" title= "凸包问题">
-                    <div class="nextTitle">凸包问题</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/posts/30919.html" title= "当数字计算机超越模拟计算机">
-                    <div class="prevTitle">当数字计算机超越模拟计算机</div>
+                <a href= "/posts/7738.html" title= "观察者模式">
+                    <div class="prevTitle">观察者模式</div>
                 </a>
             
         </li>
@@ -635,7 +689,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP的今生前世"><span class="toc-number">1.</span> <span class="toc-text">HTTP的今生前世</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#史前"><span class="toc-number">1.0.1.</span> <span class="toc-text">史前</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#诞生1"><span class="toc-number">1.0.2.</span> <span class="toc-text">诞生1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-0-9-1-0"><span class="toc-number">1.0.3.</span> <span class="toc-text">HTTP 0.9/1.0</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-1-13"><span class="toc-number">1.0.4.</span> <span class="toc-text">HTTP/1.13</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-2"><span class="toc-number">1.0.5.</span> <span class="toc-text">HTTP/2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HTTP-3"><span class="toc-number">1.0.6.</span> <span class="toc-text">HTTP/3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-number">1.0.7.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从AJAX到SPA"><span class="toc-number">2.</span> <span class="toc-text">从AJAX到SPA</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为何需要同构"><span class="toc-number">3.</span> <span class="toc-text">为何需要同构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前端同构渲染"><span class="toc-number">4.</span> <span class="toc-text">前端同构渲染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#我们需要同构吗"><span class="toc-number">5.</span> <span class="toc-text">我们需要同构吗</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">6.</span> <span class="toc-text">参考</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
