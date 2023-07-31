@@ -1,0 +1,488 @@
+@import "rem";
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+@baseFont: 50;
+
+body {
+    min-width: 320px;
+    width: 15rem;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+//clearfix
+.clearfix::after,
+.clearfix::before {
+    content: " ";
+    display: table;
+    clear: both;
+}
+
+.pc{
+    display: none!important;
+}
+
+//设置首屏
+#homepage {
+    width: 15rem;
+    height: (500rem / @baseFont);
+    img{
+        width: 100%;
+    }
+    position: relative;
+}
+
+#geek {
+    position: absolute;
+    left: 52%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 9rem;
+
+    img {
+        width: 95%;
+    }
+}
+
+//设置实验室
+#home {
+    width: 15rem;
+    height: (523rem / @baseFont);
+    background: url(../img/房子内部图.png) no-repeat;
+    background-size: 100% auto;
+    position: relative;
+}
+
+#boat {
+    position: absolute;
+    bottom: -2.5rem;
+    left: -1rem;
+    width: 6rem;
+    height: 6rem;
+    z-index: 1;
+}
+
+//设置主体背景
+#backgoundbox {
+    margin-top: -0.1rem;
+    background: linear-gradient(rgba(26, 55, 89), rgba(10, 17, 27));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    #intro-box {
+        margin-top: 5rem;
+        border: 2px solid white;
+        border-radius: 15px;
+        width: 13rem;
+        padding: 10px;
+        position: relative;
+        #introplace{
+            font-size: (50rem/@baseFont);
+            color: #fff;
+            position: absolute;
+            top: (-120rem/@baseFont);
+            left: 53%;
+            transform: translate(-50%);
+            text-align: center;
+            width: (350rem/@baseFont);
+            i{
+                margin-left: 5px;
+            }
+        }
+        .pic-text {
+            background-color: rgb(17,34,55);
+            border: 2px solid white;
+            display: flex;
+            flex-direction: column;
+            #pic-text{
+                display: flex;
+                div{
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+            img {
+                align-self: center;
+                height: 6rem;
+            }
+
+            #intro-text {
+                align-self: center;
+                color: aliceblue;
+                width: 90%;
+                margin-bottom: 10px;
+                p {
+                    font-size: (25rem/@baseFont);
+                }
+            }
+        }
+        #card1{
+            h1 {
+                color: aliceblue;
+                text-align: center;
+                font-size: (55rem/@baseFont);
+            }
+            h2 {
+                color: aliceblue;
+                text-align: center;
+                font-size: (37rem/@baseFont);
+            }
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        #card2{
+            img{
+                margin-left: -5px;
+            }
+            h1 {    
+                color: aliceblue;               
+                text-align: center;
+                font-size: (55rem/@baseFont);
+            }
+            h2 {
+                color: aliceblue;
+                width: 85%;
+                text-align: center;
+                font-size: (25rem/@baseFont);
+            }
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        #card3{
+            img{
+                height: 5.5rem;
+                margin-left: 25px;
+                margin-right: -8px;
+            }
+            h1 {
+                color: aliceblue;
+                text-align: center;
+                font-size: (55rem/@baseFont);
+            }
+            h2 {
+                color: aliceblue;
+                width: 80%;
+                text-align: center;
+                font-size: (27rem/@baseFont);
+            }
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        #card4{
+            img{
+                margin-left: 8px;
+                margin-right: -5px;
+            }
+            h1 {
+                color: aliceblue;   
+                text-align: center;
+                font-size: (55rem/@baseFont);
+            }
+            h2 {
+                color: aliceblue;
+                width: 85%;
+                text-align: center;
+                font-size: (32rem/@baseFont);
+            }
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        
+    }
+
+    #about-box{
+        margin-top: 100px;
+        border: 3px solid white;
+        border-radius: 6px;
+        width: 13.5rem;
+        position: relative;
+        #aboutplace{
+            font-size: (50rem/@baseFont);
+            color: #fff;
+            position: absolute;
+            top: (-120rem/@baseFont);
+            left: 50%;
+            transform: translate(-50%);
+            i{
+                margin-left: 5px;
+            }
+        }
+        ul{
+            display: flex;
+            justify-content: center;
+            padding: 5px;
+        }
+        li{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            width: 50%!important;
+            opacity: 1!important;
+            background-color: #fff;
+            img{
+                margin-bottom: 10px;
+            }
+            
+        }
+        #time{
+            p{
+                margin-top: -6px;
+            }
+        }
+        #diversity{
+            margin:0 5px;
+        }
+        img{
+            width: 70%;
+        }
+        p{
+        margin-bottom: 8px;
+        width: 90%;
+        font-size: 11px;
+        color: #441274;
+        font-weight: 600;
+
+    }
+    }
+
+    #contact-box {
+        margin-top: 5rem;
+        border: 3px solid white;
+        border-radius: 10px;
+        width: 13rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        #contactplace{
+            font-size: (50rem/@baseFont);
+            color: #fff;
+            position: absolute;
+            top: (-120rem/@baseFont);
+            left: 50%;
+            transform: translate(-50%);
+            i{
+                margin-left: 5px;
+            }
+        }
+        #contact-text {
+            margin-top: 20px;
+            width: 11rem;
+            border: 3px solid white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 20px 20px 20px rgb(0 0 0 / 30%);
+            p {
+                color: white;
+                font-size: (30rem/@baseFont);
+            }
+            #ps{
+                margin-top: 15px;
+                letter-spacing: 2px;
+                // line-height: 35px;
+                color:gainsboro;
+                width: 90%;
+                font-size: (22rem/@baseFont);
+            }
+        }
+
+            #email{
+                cursor: pointer;
+                color: #551A8B;
+            }
+            #a-li {
+                z-index: 2;
+                width: 5rem;
+                height: 6rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                // border: 1px solid white;
+                a {
+                    color: #551A8B;
+                    display: block;
+                    background-color: aliceblue;
+                    width: 80%;
+                    height: 28px;
+                    margin-bottom: 10px;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    border-radius: 10px;
+                    font-size: 0.45rem;
+                    font-weight: 800;
+                    line-height: 28px;
+                    text-align: center;
+                    i{
+                        margin-left: 2px;
+                    }
+                }
+            }
+            #mailbox{
+                z-index: 2;
+                right: 0;
+                bottom: 0;
+                width: 30%;
+                position: absolute;
+            }
+            #envelope{
+                z-index: 2;
+                left: 0;
+                bottom: 0;
+                width: 25%;
+                position: absolute;
+            }
+            #wave{
+                bottom: 0;
+                width: 104%;
+                position: absolute;
+            }
+        
+    }
+
+    /*设置问答部分块*/
+    .QA-wrapper {
+        width: 13rem;
+        border: 5px solid cornflowerblue;
+        border-radius: 25px;
+        margin-top: (150rem/@baseFont);
+        margin-bottom: (150rem/@baseFont);
+        background-image: url(../img/首页背景.jpg);
+        background-size: 400%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #center-QA {
+        width: 80%;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        color: whitesmoke;
+        font-size: (50rem/@baseFont);
+        text-align: center;
+
+        i{
+            margin-left: 5px;
+        }
+    }
+
+    #QA-list {
+        width: 78%;
+        margin-bottom: 20px;
+    }
+
+    #QA-ul a {
+        display: block;
+        line-height: (60rem/@baseFont);
+        font-size: (29.5rem/@baseFont);
+        color: whitesmoke;
+    }
+
+    #QA-ul p {
+        font-weight: 500;
+        padding: 10px;
+        font-size: (27rem/@baseFont);
+        color: whitesmoke;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+    }
+    #bottom-img {
+        margin-top: 350px;
+        #spaceman {
+            width: 5rem;
+            position: absolute;
+            left: 60%;
+            transform: translate(-50%);
+            bottom: 20px;
+            z-index: 2;
+        }
+
+        #moon {
+            width: 15rem;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        #earth {
+            width: 5rem;
+            position: absolute;
+            right: 0;
+            bottom: 150px;
+        }
+
+        #rocket {
+            width: 14rem;
+            position: absolute;
+            left: -20px;
+            bottom: 32px;
+            transform: rotate(-15deg);
+        }
+
+        #Jupiter {
+            width: 5rem;
+            position: absolute;
+            left: -5px;
+            bottom: 250px;
+        }
+    }
+
+}
+
+/*设置footer*/
+.footer {
+    width: 100%;
+    background-color: rgba(230, 230, 230);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    #footer1 {
+        margin-top: 10px;
+        padding-top: 5px;
+        border: 1px gray solid;
+        border-left: transparent;
+        border-right: transparent;
+        border-bottom: transparent;
+        font-size: 13px;
+        width: 80%;
+        text-align: center;
+    }
+
+    #footer2 {
+        font-size: 12px;
+        width: 90%;
+        text-align: center;
+        margin-bottom: 5px;
+        padding-bottom: 5px;
+        border: 1px gray solid;
+        border-left: transparent;
+        border-right: transparent;
+        border-top: transparent;
+    }
+}
+
+.showAnswer {
+    display: block;
+}
