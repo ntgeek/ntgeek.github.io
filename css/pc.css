@@ -706,3 +706,41 @@ nav {
   top: 10px;
   z-index: 999;
 }
+
+/*允许下拉层超出导航条显示*/
+nav, #top-nav { overflow: visible; }
+
+/*触发器：让 li 成为定位参考*/
+#introduction { position: relative; }
+
+/* 下拉层 */
+#introduction .dropdown-image{
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+
+  max-height: 0;            
+  overflow: hidden;
+
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.15);
+  z-index: 1000;
+  transition: max-height .4s ease-in-out, opacity .3s ease;
+
+  opacity: 0;                 
+}
+
+#introduction:hover .dropdown-image,
+#introduction:focus-within .dropdown-image{
+  max-height: 600px;         
+  opacity: 1;
+}
+
+#introduction .dropdown-image img{
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
