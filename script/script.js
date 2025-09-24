@@ -60,7 +60,7 @@ for (var i = 0; i < ulChildren.length; i++) {
 };
 /*复制邮箱链接 */
 var btn = document.getElementById("email");
-var content = "newthread_geek@outlook.com";
+var content = "newthread-geek@outlook.com";
 btn.onclick = function copyToClip() {
     var aux = document.createElement("input");
     aux.setAttribute("value", content);
@@ -281,3 +281,4 @@ if (screen.width > 1000) {
     });
 };
 console.log("要保持好奇心，虽然不一定每次都会有满意的结果。");
+
