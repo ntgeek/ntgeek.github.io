@@ -503,3 +503,7 @@ ul {
 .showAnswer {
   display: block;
 }
+#card1 #intro-text p:last-child {
+  color: rgb(198, 168, 226) !important;
+  font-weight: 800;
+}

@@ -616,6 +616,9 @@ body {
   transition: all 0.5s;
   border-radius: 15px;
   background-color: aliceblue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #pointer1 {
   top: 0px;
